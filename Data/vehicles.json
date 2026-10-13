@@ -1,0 +1,1327 @@
+[
+  {
+    "displayName": "Truffade Adder",
+    "modelName": "adder",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Zentorno",
+    "modelName": "zentorno",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Progen T20",
+    "modelName": "t20",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Osiris",
+    "modelName": "osiris",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Benefactor Krieger",
+    "modelName": "krieger",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Ignus",
+    "modelName": "ignus",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Grotti Turismo R",
+    "modelName": "turismor",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Overflod Entity XF",
+    "modelName": "entityxf",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Overflod Entity MT",
+    "modelName": "entitymt",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Tempesta",
+    "modelName": "tempesta",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Benefactor Schlagen GT",
+    "modelName": "schlagen",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Ocelot Pariah",
+    "modelName": "pariah",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Annis Elegy RH8",
+    "modelName": "elegy2",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Karin Sultan",
+    "modelName": "sultan",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Karin Kuruma",
+    "modelName": "kuruma",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Dinka Jester",
+    "modelName": "jester",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Pfister Comet",
+    "modelName": "comet2",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Pfister Comet SR",
+    "modelName": "comet5",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Bravado Banshee",
+    "modelName": "banshee",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Grotti Itali GTO",
+    "modelName": "italigto",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Grotti Itali RSX",
+    "modelName": "italirsx",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Bati 801",
+    "modelName": "bati",
+    "category": "Motorcycle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Bati 801RR",
+    "modelName": "bati2",
+    "category": "Motorcycle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Shitzu Hakuchou",
+    "modelName": "hakuchou",
+    "category": "Motorcycle",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Dinka Akuma",
+    "modelName": "akuma",
+    "category": "Motorcycle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Buckingham Luxor",
+    "modelName": "luxor",
+    "category": "Plane",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Mammoth Hydra",
+    "modelName": "hydra",
+    "category": "Plane",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "P-996 LAZER",
+    "modelName": "lazer",
+    "category": "Plane",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "F-160 Raiju",
+    "modelName": "raiju",
+    "category": "Plane",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Nagasaki Buzzard",
+    "modelName": "buzzard2",
+    "category": "Helicopter",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Buckingham Akula",
+    "modelName": "akula",
+    "category": "Helicopter",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "FH-1 Hunter",
+    "modelName": "hunter",
+    "category": "Helicopter",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Shitzu Longfin",
+    "modelName": "longfin",
+    "category": "Boat",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Speeder",
+    "modelName": "speeder",
+    "category": "Boat",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Shitzu Jetmax",
+    "modelName": "jetmax",
+    "category": "Boat",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  
+  {
+    "displayName": "Bravado Buffalo S",
+    "modelName": "buffalo2",
+    "category": "Sports",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Bravado Buffalo STX",
+    "modelName": "buffalo4",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Declasse Vigero ZX",
+    "modelName": "vigero2",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Vapid Dominator",
+    "modelName": "dominator",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Vapid Dominator ASP",
+    "modelName": "dominator7",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Vapid Dominator GTT",
+    "modelName": "dominator8",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Declasse Sabre Turbo",
+    "modelName": "sabregt",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Imponte Dukes",
+    "modelName": "dukes",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Bravado Gauntlet",
+    "modelName": "gauntlet",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Bravado Gauntlet Hellfire",
+    "modelName": "gauntlet4",
+    "category": "Muscle",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Vapid Bullet",
+    "modelName": "bullet",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Grotti Cheetah",
+    "modelName": "cheetah",
+    "category": "Super",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Grotti Furia",
+    "modelName": "furia",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Grotti Visione",
+    "modelName": "visione",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Dewbauchee Vagner",
+    "modelName": "vagner",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Ocelot XA-21",
+    "modelName": "xa21",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Principe Deveste Eight",
+    "modelName": "deveste",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Coil Cyclone",
+    "modelName": "cyclone",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Coil Cyclone II",
+    "modelName": "cyclone2",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Torero XO",
+    "modelName": "torero2",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Overflod Tyrant",
+    "modelName": "tyrant",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Progen Emerus",
+    "modelName": "emerus",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Annis S80RR",
+    "modelName": "s80",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Benefactor LM87",
+    "modelName": "lm87",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Pegassi Weaponized Ignus",
+    "modelName": "ignus2",
+    "category": "Super",
+    "hash": null,
+    "isDlc": true,
+    "notes": ""
+  },
+  {
+    "displayName": "Bravado Bison",
+    "modelName": "bison",
+    "category": "Van",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Vapid Speedo",
+    "modelName": "speedo",
+    "category": "Van",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Brute Pony",
+    "modelName": "pony",
+    "category": "Van",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Declasse Burrito",
+    "modelName": "burrito3",
+    "category": "Van",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  {
+    "displayName": "Vapid Minivan",
+    "modelName": "minivan",
+    "category": "Van",
+    "hash": null,
+    "isDlc": false,
+    "notes": ""
+  },
+  
+    {
+      "displayName": "Benefactor SM722",
+      "modelName": "sm722",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Obey 10F",
+      "modelName": "tenf",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Obey 10F Widebody",
+      "modelName": "tenf2",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Annis Euros",
+      "modelName": "euros",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Annis Remus",
+      "modelName": "remus",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Karin Calico GTF",
+      "modelName": "calico",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Dominator GTX",
+      "modelName": "domgtx",
+      "category": "Muscle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Ellie",
+      "modelName": "ellie",
+      "category": "Muscle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Declasse Tulip",
+      "modelName": "tulip",
+      "category": "Muscle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Declasse Tampa",
+      "modelName": "tampa",
+      "category": "Muscle",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Clique",
+      "modelName": "clique",
+      "category": "Muscle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Albany Hermes",
+      "modelName": "hermes",
+      "category": "Muscle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pfister Neon",
+      "modelName": "neon",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Lampadati Corsita",
+      "modelName": "corsita",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Emperor Vectre",
+      "modelName": "vectre",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Dinka RT3000",
+      "modelName": "rt3000",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Karin Futo GTX",
+      "modelName": "futo2",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Karin Previon",
+      "modelName": "previon",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Vulcar Warrener HKR",
+      "modelName": "warrener2",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Ubermacht Cypher",
+      "modelName": "cypher",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pfister Astron",
+      "modelName": "astron",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Benefactor XLS",
+      "modelName": "xls",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Gallivanter Baller LE",
+      "modelName": "baller3",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Gallivanter Baller ST",
+      "modelName": "baller7",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Canis Terminus",
+      "modelName": "terminus",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Canis Kamacho",
+      "modelName": "kamacho",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Caracara 4x4",
+      "modelName": "caracara2",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Annis Hellion",
+      "modelName": "hellion",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Declasse Draugur",
+      "modelName": "draugur",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Maibatsu MonstroCiti",
+      "modelName": "monstrociti",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Nagasaki Shinobi",
+      "modelName": "shinobi",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Reever",
+      "modelName": "reever",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pegassi Oppressor",
+      "modelName": "oppressor",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pegassi Oppressor Mk II",
+      "modelName": "oppressor2",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Nagasaki Chimera",
+      "modelName": "chimera",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Powersurge",
+      "modelName": "powersurge",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Mammoth Avenger",
+      "modelName": "avenger",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Mammoth Avenger II",
+      "modelName": "avenger2",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Rogue",
+      "modelName": "rogue",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "JoBuilt P-45 Nokota",
+      "modelName": "nokota",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Buckingham Pyro",
+      "modelName": "pyro",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Buckingham Volatol",
+      "modelName": "volatol",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Sea Sparrow",
+      "modelName": "seasparrow",
+      "category": "Helicopter",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Buckingham Swift Deluxe",
+      "modelName": "swift2",
+      "category": "Helicopter",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Nagasaki Dinghy",
+      "modelName": "dinghy",
+      "category": "Boat",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Shitzu Tropic",
+      "modelName": "tropic",
+      "category": "Boat",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Lampadati Toro",
+      "modelName": "toro",
+      "category": "Boat",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pegassi Toreador",
+      "modelName": "toreador",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Grotti Turismo Classic",
+      "modelName": "turismo2",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Benefactor Stirling GT",
+      "modelName": "feltzer3",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+  
+    {
+      "displayName": "Albany Alpha",
+      "modelName": "alpha",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Dewbauchee Seven-70",
+      "modelName": "seven70",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Hijak Ruston",
+      "modelName": "ruston",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Invetero Coquette D10",
+      "modelName": "coquette4",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Grotti Bestia GTS",
+      "modelName": "bestiagts",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Obey Omnis",
+      "modelName": "omnis",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Obey Omnis e-GT",
+      "modelName": "omnisegt",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Annis ZR350",
+      "modelName": "zr350",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Dinka Sugoi",
+      "modelName": "sugoi",
+      "category": "Sports",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Emperor ETR1",
+      "modelName": "sheava",
+      "category": "Super",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pegassi Reaper",
+      "modelName": "reaper",
+      "category": "Super",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Grotti X80 Proto",
+      "modelName": "prototipo",
+      "category": "Super",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Overflod Autarch",
+      "modelName": "autarch",
+      "category": "Super",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Benefactor BR8",
+      "modelName": "openwheel1",
+      "category": "Open Wheel",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Declasse DR1",
+      "modelName": "openwheel2",
+      "category": "Open Wheel",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Progen PR4",
+      "modelName": "openwheel3",
+      "category": "Open Wheel",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Ocelot R88",
+      "modelName": "openwheel4",
+      "category": "Open Wheel",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Pegassi Monroe",
+      "modelName": "monroe",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Lampadati Casco",
+      "modelName": "casco",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Grotti Stinger",
+      "modelName": "stinger",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Grotti Stinger GT",
+      "modelName": "stingergt",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Pegassi Infernus Classic",
+      "modelName": "infernus2",
+      "category": "Sports Classic",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Benefactor Glendale",
+      "modelName": "glendale",
+      "category": "Sedan",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Benefactor Schafter",
+      "modelName": "schafter2",
+      "category": "Sedan",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Albany Washington",
+      "modelName": "washington",
+      "category": "Sedan",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Cheval Fugitive",
+      "modelName": "fugitive",
+      "category": "Sedan",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Ubermacht Oracle XS",
+      "modelName": "oracle2",
+      "category": "Sedan",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Benefactor Dubsta",
+      "modelName": "dubsta",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Canis Mesa",
+      "modelName": "mesa",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Canis Seminole Frontier",
+      "modelName": "seminole2",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Gallivanter Patriot",
+      "modelName": "patriot",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Mammoth Patriot Mil-Spec",
+      "modelName": "patriot3",
+      "category": "SUV",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Contender",
+      "modelName": "contender",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Karin Everon",
+      "modelName": "everon",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Declasse Yosemite Rancher",
+      "modelName": "yosemite3",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Nagasaki Outlaw",
+      "modelName": "outlaw",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Sandking SWB",
+      "modelName": "sandking",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Vapid Sandking XL",
+      "modelName": "sandking2",
+      "category": "Off-Road",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Daemon",
+      "modelName": "daemon",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Wolfsbane",
+      "modelName": "wolfsbane",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "LCC Hexer",
+      "modelName": "hexer",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "LCC Sanctus",
+      "modelName": "sanctus",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Gargoyle",
+      "modelName": "gargoyle",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Zombie Bobber",
+      "modelName": "zombieb",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Zombie Chopper",
+      "modelName": "zombieb",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Nagasaki BF400",
+      "modelName": "bf400",
+      "category": "Motorcycle",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Company Cuban 800",
+      "modelName": "cuban800",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Buckingham Miljet",
+      "modelName": "miljet",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": false,
+      "notes": ""
+    },
+    {
+      "displayName": "Western Company Besra",
+      "modelName": "besra",
+      "category": "Plane",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    },
+    {
+      "displayName": "Buckingham Valkyrie",
+      "modelName": "valkyrie",
+      "category": "Helicopter",
+      "hash": null,
+      "isDlc": true,
+      "notes": ""
+    }
+  
+  
+]
