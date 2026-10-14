@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <OutputType>Library</OutputType>
+        <AssemblyName>TitanTrainer</AssemblyName>
+        <RootNamespace>TitanTrainer</RootNamespace>
+        <LangVersion>latest</LangVersion>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>CS1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="System.Windows.Forms" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="ScriptHookVDotNet">
+            <HintPath>libs\ScriptHookVDotNet3.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="LemonUI">
+            <HintPath>libs\LemonUI.SHVDN3.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Data\vehicles.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="Data\favorites.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="Data\config.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

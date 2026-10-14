@@ -1,0 +1,8 @@
+{
+  "ToggleMenuKey": "F5",
+  "EnableNotifications": true,
+  "SpawnDefaults": {
+    "SpawnInside": true,
+    "MaxUpgrade": false
+  }
+}

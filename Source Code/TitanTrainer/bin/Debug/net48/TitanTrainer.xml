@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TitanTrainer</name>
+    </assembly>
+    <members>
+        <member name="T:TitanTrainer.Core.Config">
+            <summary>
+            Configuration container for Titan Trainer.
+            Loads and saves Data/config.json and provides runtime defaults when file is missing or corrupted.
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.Core.Config.ToggleMenuKey">
+            <summary>
+            Hotkey to toggle the main menu (default F5).
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.Core.Config.EnableNotifications">
+            <summary>
+            Whether to enable notifications through the trainer.
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.Core.Config.SpawnDefaults">
+            <summary>
+            Default vehicle spawn options (example).
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Core.Config.#ctor">
+            <summary>
+            Public parameterless constructor required for JSON deserialization.
+            Path is set by LoadOrCreate after deserialization.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Core.Config.#ctor(System.String)">
+            <summary>
+            Internal constructor that sets the file path.
+            </summary>
+            <param name="path">Path to the config file.</param>
+        </member>
+        <member name="M:TitanTrainer.Core.Config.LoadOrCreate(System.String)">
+            <summary>
+            Loads configuration from the given path or creates defaults if not found or corrupted.
+            </summary>
+            <param name="path">Path to config.json</param>
+            <returns>Loaded or default Config instance.</returns>
+        </member>
+        <member name="M:TitanTrainer.Core.Config.Save">
+            <summary>
+            Saves the config to disk at the configured path. Safe against IO exceptions.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Core.SpawnDefaults">
+            <summary>
+            Spawn-related default options stored in config.
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.Core.SpawnDefaults.SpawnInside">
+            <summary>
+            Whether to spawn the player inside the vehicle by default.
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.Core.SpawnDefaults.MaxUpgrade">
+            <summary>
+            Whether to apply maximum upgrades on spawn by default.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Core.Logger">
+            <summary>
+            Thread-safe logger for Titan Trainer.
+            Writes timestamped entries to a log file and optionally to the game notification system.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Core.Logger.Initialize(System.String)">
+            <summary>
+            Initializes the logger for the given component. Creates a per-day log file under Logs/{component}/.
+            </summary>
+            <param name="componentName">Name of the component (e.g., TitanTrainer).</param>
+        </member>
+        <member name="M:TitanTrainer.Core.Logger.Info(System.String)">
+            <summary>
+            Logs an informational message.
+            </summary>
+            <param name="message">The informational message.</param>
+        </member>
+        <member name="M:TitanTrainer.Core.Logger.Warn(System.String)">
+            <summary>
+            Logs a warning message.
+            </summary>
+            <param name="message">The warning message.</param>
+        </member>
+        <member name="M:TitanTrainer.Core.Logger.Error(System.String)">
+            <summary>
+            Logs an error message and optional exception.
+            </summary>
+            <param name="message">The error message or exception text.</param>
+        </member>
+        <member name="M:TitanTrainer.Core.Logger.Debug(System.String)">
+            <summary>
+            Logs a debug-level message. Use sparingly in production.
+            </summary>
+            <param name="message">The debug message.</param>
+        </member>
+        <member name="T:TitanTrainer.ScriptMain">
+            <summary>
+            The main script entry point for Titan Trainer.
+            Boots services, initializes managers, and handles game ticks.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Player.PlayerManager">
+            <summary>
+            Central player coordinator.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.UI.MenuManager">
+            <summary>
+            Handles all trainer menus.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.UI.SettingsMenu">
+            <summary>
+            Titan Trainer settings menu.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.UI.VehicleMenu">
+            <summary>
+            Vehicle spawner menu.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Utils.FileUtils">
+            <summary>
+            Simple file helpers used across the trainer.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Utils.NotificationService">
+            <summary>
+            Lightweight notification wrapper for showing messages to the player.
+            Uses GTA.UI.Screen.ShowSubtitle to avoid obsolete Notification.Show usage.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Utils.ServiceContainer">
+            <summary>
+            Lightweight service container used for simple DI inside the trainer.
+            Not a general-purpose DI framework.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Utils.ThemeManager">
+            <summary>
+            Small theme manager for storing colors and theme choices.
+            Expandable to integrate with LemonUI styling later.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Vehicles.VehicleDatabase">
+            <summary>
+            Loads and exposes the vehicle dataset from Data/vehicles.json.
+            Loads once and caches results for fast searches.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Vehicles.VehicleDatabase.#ctor(System.String)">
+            <summary>
+            Creates and loads the vehicle database from a relative path (e.g., "Data/vehicles.json").
+            </summary>
+            <param name="relativeJsonPath">Path relative to AppDomain.CurrentDomain.BaseDirectory.</param>
+        </member>
+        <member name="P:TitanTrainer.Vehicles.VehicleDatabase.AllVehicles">
+            <summary>
+            Returns all loaded vehicles as a read-only collection.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Vehicles.VehicleDatabase.FindByModel(System.String)">
+            <summary>
+            Attempts to find a vehicle by exact model name (case-insensitive).
+            </summary>
+            <param name="modelName">Model name to find (e.g., "adder").</param>
+            <returns>The matching VehicleDefinition or null if not found.</returns>
+        </member>
+        <member name="M:TitanTrainer.Vehicles.VehicleDatabase.Search(System.String)">
+            <summary>
+            Searches vehicles by a query string that matches display name, model name, or category (case-insensitive).
+            Returns all vehicles when query is null or whitespace.
+            </summary>
+            <param name="query">Search query.</param>
+            <returns>Enumerable of matching vehicles.</returns>
+        </member>
+        <member name="M:TitanTrainer.Vehicles.VehicleDatabase.GetCategories">
+            <summary>
+            Returns vehicle categories present in the database, ordered alphabetically.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Vehicles.VehicleDefinition">
+            <summary>
+            Vehicle data model used by the vehicle database.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Vehicles.VehicleFactory">
+            <summary>
+            Helper methods to apply spawn options to a spawned vehicle.
+            Kept minimal to avoid depending on Vehicle properties not present in SHVDN3.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Vehicles.VehicleManager">
+            <summary>
+            High-level vehicle manager handling favorites and spawn history.
+            Delegates actual spawn to VehicleSpawner.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Vehicles.VehicleManager.#ctor(TitanTrainer.Vehicles.VehicleDatabase)">
+            <summary>
+            Primary constructor that takes the vehicle database.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.Vehicles.VehicleManager.#ctor(TitanTrainer.Vehicles.VehicleDatabase,TitanTrainer.Utils.NotificationService)">
+            <summary>
+            Compatibility constructor: accepts a NotificationService if provided.
+            Kept to match ScriptMain's construction call.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.Vehicles.VehicleSpawner">
+            <summary>
+            Responsible for requesting models, spawning vehicles, and applying options.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.World.TimeManager">
+            <summary>
+            Handles all in-game time operations.
+            </summary>
+        </member>
+        <member name="T:TitanTrainer.World.WeatherManager">
+            <summary>
+            Handles all weather-related operations.
+            This class contains no UI logic and can safely be reused
+            by menus, hotkeys, presets and future profile systems.
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.World.WeatherManager.CurrentWeather">
+            <summary>
+            Gets the current weather.
+            </summary>
+        </member>
+        <member name="P:TitanTrainer.World.WeatherManager.IsWeatherFrozen">
+            <summary>
+            Returns whether weather is frozen.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.World.WeatherManager.SetWeather(GTA.Weather)">
+            <summary>
+            Sets weather instantly.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.World.WeatherManager.TransitionToWeather(GTA.Weather,System.Int32)">
+            <summary>
+            Smooth transition.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.World.WeatherManager.FreezeWeather(System.Boolean)">
+            <summary>
+            Freeze or unfreeze weather.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.World.WeatherManager.Update">
+            <summary>
+            Called every game tick.
+            Keeps weather locked if freeze is enabled.
+            </summary>
+        </member>
+    </members>
+</doc>

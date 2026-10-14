@@ -1,0 +1,32 @@
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.csproj.AssemblyReference.cache
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.AssemblyInfoInputs.cache
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.AssemblyInfo.cs
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.csproj.CoreCompileInputs.cache
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\vehicles.json
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\favorites.json
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\config.json
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.dll
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.pdb
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.xml
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\bin\Debug\net48\Newtonsoft.Json.dll
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTra.83CCB219.Up2Date
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.dll
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.xml
+C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.pdb
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\vehicles.json
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\favorites.json
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\config.json
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.dll
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.pdb
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.xml
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Newtonsoft.Json.dll
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.csproj.AssemblyReference.cache
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.AssemblyInfoInputs.cache
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.AssemblyInfo.cs
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.csproj.CoreCompileInputs.cache
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTra.83CCB219.Up2Date
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.dll
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.xml
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\obj\Debug\net48\TitanTrainer.pdb
