@@ -1,4 +1,4 @@
-﻿using LemonUI.Menus;
+using LemonUI.Menus;
 using TitanTrainer.Player;
 using TitanTrainer.Utils;
 
@@ -7,11 +7,23 @@ namespace TitanTrainer.UI
     public sealed class PlayerMenu : BaseMenu
     {
         private readonly PlayerManager _player;
+        private readonly System.Collections.Generic.List<NativeMenu> _allMenus = new System.Collections.Generic.List<NativeMenu>();
+        private NativeMenu _healthMenu, _movementMenu, _wantedMenu, _teleportMenu;
+        public NativeMenu[] AllMenus => _allMenus.ToArray();
 
         public PlayerMenu(ServiceContainer services)
             : base("Titan Trainer", "Player")
         {
             _player = services.Resolve<PlayerManager>();
+            _allMenus.Add(Menu);
+            _healthMenu = MenuNavigation.CreateChild(Menu, "Health & Armor", "Health, armor, and survival options", _allMenus);
+            _movementMenu = MenuNavigation.CreateChild(Menu, "Movement & Abilities", "Movement, visibility, and ability toggles", _allMenus);
+            _wantedMenu = MenuNavigation.CreateChild(Menu, "Wanted Level", "Police attention and wanted-level controls", _allMenus);
+            _teleportMenu = MenuNavigation.CreateChild(Menu, "Player Teleport", "Quick player movement and waypoint travel", _allMenus);
+            MenuNavigation.AddBack(_healthMenu, Menu, _allMenus);
+            MenuNavigation.AddBack(_movementMenu, Menu, _allMenus);
+            MenuNavigation.AddBack(_wantedMenu, Menu, _allMenus);
+            MenuNavigation.AddBack(_teleportMenu, Menu, _allMenus);
 
             //---------------------------------
             // Health
@@ -27,7 +39,7 @@ namespace TitanTrainer.UI
                 _player.Health.Heal();
             };
 
-            Menu.Add(heal);
+            _healthMenu.Add(heal);
 
             var armor = new NativeItem(
                 "Max Armor",
@@ -39,7 +51,7 @@ namespace TitanTrainer.UI
                 _player.Health.MaxArmor();
             };
 
-            Menu.Add(armor);
+            _healthMenu.Add(armor);
 
             var revive = new NativeItem(
                 "Revive",
@@ -51,9 +63,9 @@ namespace TitanTrainer.UI
                 _player.Health.Revive();
             };
 
-            Menu.Add(revive);
+            _healthMenu.Add(revive);
 
-            Menu.Add(new NativeSeparatorItem("Health"));
+            
 
             var infiniteHealth = new NativeCheckboxItem(
                 "Infinite Health",
@@ -66,7 +78,7 @@ namespace TitanTrainer.UI
                     infiniteHealth.Checked;
             };
 
-            Menu.Add(infiniteHealth);
+            _healthMenu.Add(infiniteHealth);
 
             var infiniteArmor = new NativeCheckboxItem(
                 "Infinite Armor",
@@ -79,9 +91,9 @@ namespace TitanTrainer.UI
                     infiniteArmor.Checked;
             };
 
-            Menu.Add(infiniteArmor);
+            _healthMenu.Add(infiniteArmor);
 
-            Menu.Add(new NativeSeparatorItem("Movement"));
+            
 
             var superJump = new NativeCheckboxItem(
                 "Super Jump",
@@ -94,7 +106,7 @@ namespace TitanTrainer.UI
                     superJump.Checked;
             };
 
-            Menu.Add(superJump);
+            _movementMenu.Add(superJump);
 
             var fastRun = new NativeCheckboxItem(
                 "Fast Run",
@@ -107,7 +119,7 @@ namespace TitanTrainer.UI
                     fastRun.Checked;
             };
 
-            Menu.Add(fastRun);
+            _movementMenu.Add(fastRun);
 
             var stamina = new NativeCheckboxItem(
                 "Infinite Stamina",
@@ -120,7 +132,7 @@ namespace TitanTrainer.UI
                     stamina.Checked;
             };
 
-            Menu.Add(stamina);
+            _movementMenu.Add(stamina);
 
             var ragdoll = new NativeCheckboxItem(
                 "No Ragdoll",
@@ -133,7 +145,7 @@ namespace TitanTrainer.UI
                     ragdoll.Checked;
             };
 
-            Menu.Add(ragdoll);
+            _movementMenu.Add(ragdoll);
 
             var invisible = new NativeCheckboxItem(
                 "Invisible",
@@ -146,9 +158,9 @@ namespace TitanTrainer.UI
                     invisible.Checked;
             };
 
-            Menu.Add(invisible);
+            _movementMenu.Add(invisible);
 
-            Menu.Add(new NativeSeparatorItem("Wanted"));
+            
 
             var neverWanted = new NativeCheckboxItem(
                 "Never Wanted",
@@ -161,7 +173,7 @@ namespace TitanTrainer.UI
                     neverWanted.Checked;
             };
 
-            Menu.Add(neverWanted);
+            _wantedMenu.Add(neverWanted);
 
             var freezeWanted = new NativeCheckboxItem(
                 "Freeze Wanted Level",
@@ -174,7 +186,7 @@ namespace TitanTrainer.UI
                     freezeWanted.Checked;
             };
 
-            Menu.Add(freezeWanted);
+            _wantedMenu.Add(freezeWanted);
 
             var clearWanted = new NativeItem(
                 "Clear Wanted Level"
@@ -185,7 +197,7 @@ namespace TitanTrainer.UI
                 _player.Wanted.ClearWanted();
             };
 
-            Menu.Add(clearWanted);
+            _wantedMenu.Add(clearWanted);
 
             var wanted5 = new NativeItem(
                 "Set Wanted Level ★★★★★"
@@ -196,9 +208,9 @@ namespace TitanTrainer.UI
                 _player.Wanted.SetWantedLevel(5);
             };
 
-            Menu.Add(wanted5);
+            _wantedMenu.Add(wanted5);
 
-            Menu.Add(new NativeSeparatorItem("Teleport"));
+            
 
             var waypoint = new NativeItem(
                 "Teleport To Waypoint"
@@ -209,7 +221,7 @@ namespace TitanTrainer.UI
                 _player.Teleport.TeleportToWaypoint();
             };
 
-            Menu.Add(waypoint);
+            _teleportMenu.Add(waypoint);
 
             var forward = new NativeItem(
                 "Teleport Forward"
@@ -220,7 +232,7 @@ namespace TitanTrainer.UI
                 _player.Teleport.TeleportForward();
             };
 
-            Menu.Add(forward);
+            _teleportMenu.Add(forward);
 
             var safe = new NativeItem(
                 "Teleport To Ground"
@@ -231,7 +243,7 @@ namespace TitanTrainer.UI
                 _player.Teleport.TeleportSafe();
             };
 
-            Menu.Add(safe);
+            _teleportMenu.Add(safe);
 
             var sky = new NativeItem(
                 "Teleport To Sky"
@@ -242,7 +254,9 @@ namespace TitanTrainer.UI
                 _player.Teleport.TeleportSky();
             };
 
-            Menu.Add(sky);
+            _teleportMenu.Add(sky);
         }
+        public override void Hide() => MenuNavigation.Hide(_allMenus);
+        public override void Show() { MenuNavigation.Hide(_allMenus); Menu.Visible = true; }
     }
 }

@@ -54,13 +54,12 @@ namespace TitanTrainer.UI
             {
                 _pool.Add(vehicleMenu);
             }
-            _pool.Add(_settingsMenu.Menu);
-            _pool.Add(_weatherMenu.Menu);
-            _pool.Add(_timeMenu.Menu);
-
-            _pool.Add(_playerMenu.Menu);
-            _pool.Add(_weaponsMenu.Menu);
-            _pool.Add(_teleportMenu.Menu);
+            foreach (var menu in _settingsMenu.AllMenus) _pool.Add(menu);
+            foreach (var menu in _weatherMenu.AllMenus) _pool.Add(menu);
+            foreach (var menu in _timeMenu.AllMenus) _pool.Add(menu);
+            foreach (var menu in _playerMenu.AllMenus) _pool.Add(menu);
+            foreach (var menu in _weaponsMenu.AllMenus) _pool.Add(menu);
+            foreach (var menu in _teleportMenu.AllMenus) _pool.Add(menu);
             foreach (var entityMenu in _entitySpawnerMenu.AllMenus) _pool.Add(entityMenu);
             foreach (var sceneMenu in _sceneBuilderMenu.AllMenus) _pool.Add(sceneMenu);
             
@@ -76,6 +75,14 @@ namespace TitanTrainer.UI
             _sceneBuilderMenu.Hide();
 
             BuildMainMenu();
+            MenuNavigation.RegisterParent(_playerMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_weaponsMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_teleportMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_entitySpawnerMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_sceneBuilderMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_weatherMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_timeMenu.Menu, _mainMenu.Menu);
+            MenuNavigation.RegisterParent(_settingsMenu.Menu, _mainMenu.Menu);
         }
 
         private void BuildMainMenu()
@@ -109,23 +116,12 @@ namespace TitanTrainer.UI
             _mainMenu.Menu.Add(teleport);
 
             //------------------------------------------------
-            // Vehicle Spawner
+            // Vehicles
             //------------------------------------------------
+            var vehicles = new NativeItem("Vehicles", "Vehicle controls, customization, and spawner");
+            vehicles.Activated += (s, e) => { HideAllMenus(); _vehicleMenu.Show(); };
+            _mainMenu.Menu.Add(vehicles);
 
-            var vehicle = new NativeItem(
-                "Vehicle Spawner",
-                "Spawn vehicles"
-            );
-
-            vehicle.Activated += (s, e) =>
-            {
-                HideAllMenus();
-
-                _vehicleMenu.Show();
-            };
-
-            _mainMenu.Menu.Add(vehicle);
-            
             var entities = new NativeItem("Entity Spawner", "Spawn props and pedestrians");
             entities.Activated += (s, e) => { HideAllMenus(); _entitySpawnerMenu.Show(); };
             _mainMenu.Menu.Add(entities);
@@ -226,6 +222,23 @@ namespace TitanTrainer.UI
         }
 
         //------------------------------------------------
+
+        /// <summary>
+        /// Routes Backspace to the vehicle-menu hierarchy when one is active.
+        /// </summary>
+        public bool HandleBackspace()
+        {
+            if (_vehicleMenu.HandleBackspace())
+            {
+                if (_vehicleMenu.RootWasClosedByBackspace) { HideAllMenus(); _mainMenu.Show(); _vehicleMenu.ClearRootBackspaceFlag(); }
+                return true;
+            }
+            if (MenuNavigation.TryBack(_playerMenu.AllMenus) || MenuNavigation.TryBack(_weaponsMenu.AllMenus) ||
+                MenuNavigation.TryBack(_teleportMenu.AllMenus) || MenuNavigation.TryBack(_settingsMenu.AllMenus) ||
+                MenuNavigation.TryBack(_weatherMenu.AllMenus) || MenuNavigation.TryBack(_timeMenu.AllMenus) ||
+                MenuNavigation.TryBack(_entitySpawnerMenu.AllMenus) || MenuNavigation.TryBack(_sceneBuilderMenu.AllMenus)) return true;
+            return false;
+        }
 
         public void ToggleMainMenu()
         {

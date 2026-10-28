@@ -111,19 +111,41 @@
             Central player coordinator.
             </summary>
         </member>
+        <member name="T:TitanTrainer.Player.SavedLocation">
+            <summary>Persistent named location snapshots for Story Mode teleportation.</summary>
+        </member>
+        <member name="T:TitanTrainer.UI.EntitySpawnerMenu">
+            <summary>Prop and pedestrian spawning menus with explicit category navigation.</summary>
+        </member>
         <member name="T:TitanTrainer.UI.MenuManager">
             <summary>
             Handles all trainer menus.
             </summary>
         </member>
-        <member name="T:TitanTrainer.UI.SettingsMenu">
+        <member name="M:TitanTrainer.UI.MenuManager.HandleBackspace">
             <summary>
-            Titan Trainer settings menu.
+            Routes Backspace to the vehicle-menu hierarchy when one is active.
             </summary>
+        </member>
+        <member name="T:TitanTrainer.UI.MenuNavigation">
+            <summary>Small shared helpers for consistent parent/child menu navigation.</summary>
+        </member>
+        <member name="T:TitanTrainer.UI.ObjectPlacementMenu">
+            <summary>Hierarchical tools for positioning and managing trainer-spawned props.</summary>
+        </member>
+        <member name="T:TitanTrainer.UI.SceneBuilderMenu">
+            <summary>Hierarchical menus for saving, loading, and deleting scene snapshots.</summary>
         </member>
         <member name="T:TitanTrainer.UI.VehicleMenu">
             <summary>
-            Vehicle spawner menu.
+            Vehicle controls and a three-level vehicle browser:
+            Vehicle Spawner -> Category -> Vehicles in that category.
+            </summary>
+        </member>
+        <member name="M:TitanTrainer.UI.VehicleMenu.HandleBackspace">
+            <summary>
+            Handles keyboard Backspace for vehicle menus. Returns false when no vehicle
+            menu is visible so other trainer menus can process their own navigation.
             </summary>
         </member>
         <member name="T:TitanTrainer.Utils.FileUtils">
@@ -148,6 +170,9 @@
             Small theme manager for storing colors and theme choices.
             Expandable to integrate with LemonUI styling later.
             </summary>
+        </member>
+        <member name="T:TitanTrainer.Vehicles.VehicleAppearance">
+            <summary>Vehicle paint, lighting, wheels, window tint, smoke and livery customization.</summary>
         </member>
         <member name="T:TitanTrainer.Vehicles.VehicleDatabase">
             <summary>
@@ -214,10 +239,34 @@
             Kept to match ScriptMain's construction call.
             </summary>
         </member>
+        <member name="T:TitanTrainer.Vehicles.VehiclePresetService">
+            <summary>Persists vehicle presets and favorites as JSON files under the trainer Data folder.</summary>
+        </member>
         <member name="T:TitanTrainer.Vehicles.VehicleSpawner">
             <summary>
             Responsible for requesting models, spawning vehicles, and applying options.
             </summary>
+        </member>
+        <member name="T:TitanTrainer.World.EntitySpawner">
+            <summary>Safe, curated prop and pedestrian spawning for GTA V Story Mode.</summary>
+        </member>
+        <member name="M:TitanTrainer.World.EntitySpawner.CaptureTrackedEntities">
+            <summary>Captures only entities created and tracked by Titan Trainer, never arbitrary world entities.</summary>
+        </member>
+        <member name="M:TitanTrainer.World.EntitySpawner.MoveLastProp(System.Single,System.Single,System.Single)">
+            <summary>Moves the last prop relative to the player's current facing direction.</summary>
+        </member>
+        <member name="M:TitanTrainer.World.EntitySpawner.RotateLastProp(System.Single)">
+            <summary>Rotates the last prop around its vertical axis.</summary>
+        </member>
+        <member name="M:TitanTrainer.World.EntitySpawner.MakeLastPedFollowPlayer">
+            <summary>Orders the last trainer-spawned pedestrian to follow the player.</summary>
+        </member>
+        <member name="M:TitanTrainer.World.EntitySpawner.MakeAllPedsFollowPlayer">
+            <summary>Orders all trainer-spawned pedestrians to follow the player.</summary>
+        </member>
+        <member name="T:TitanTrainer.World.SceneBuilderService">
+            <summary>Persists and restores scene snapshots made from Titan Trainer-spawned entities and the player's current vehicle.</summary>
         </member>
         <member name="T:TitanTrainer.World.TimeManager">
             <summary>

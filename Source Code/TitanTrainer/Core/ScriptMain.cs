@@ -147,6 +147,14 @@ namespace TitanTrainer
 
             try
             {
+                if (e.KeyCode == Keys.Back && _menuManager.HandleBackspace())
+                {
+                    // Prevent this keypress from being treated as a generic close action.
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    return;
+                }
+
                 if (e.KeyCode == _toggleMenuKey)
                 {
                     _menuManager.ToggleMainMenu();

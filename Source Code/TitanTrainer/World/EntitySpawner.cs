@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GTA;
 using GTA.Math;
+using TitanTrainer.Core;
 using TitanTrainer.Utils;
 
 namespace TitanTrainer.World
@@ -51,7 +52,7 @@ namespace TitanTrainer.World
                 }
 
                 Vector3 position = player.Position + player.ForwardVector * 2.5f;
-                Prop prop = GTA.World.CreateProp(model, position, true, true);
+                Prop prop = Prop.Create(model, position, true, true);
                 model.MarkAsNoLongerNeeded();
                 if (prop == null || !prop.Exists())
                 {
@@ -101,7 +102,7 @@ namespace TitanTrainer.World
                 }
 
                 Vector3 position = player.Position + player.ForwardVector * 3.0f;
-                Ped ped = GTA.World.CreatePed(model, position);
+                Ped ped = Ped.Create(model, position, player.Heading);
                 model.MarkAsNoLongerNeeded();
                 if (ped == null || !ped.Exists())
                 {
@@ -219,7 +220,7 @@ namespace TitanTrainer.World
                     _notifications?.NotifyError("Object model failed to load");
                     return;
                 }
-                Prop duplicate = GTA.World.CreateProp(model, prop.Position + new Vector3(1.0f, 0.0f, 0.0f), true, true);
+                Prop duplicate = Prop.Create(model, prop.Position + new Vector3(1.0f, 0.0f, 0.0f), true, true);
                 model.MarkAsNoLongerNeeded();
                 if (duplicate == null || !duplicate.Exists())
                 {
@@ -262,7 +263,7 @@ namespace TitanTrainer.World
                 var player = Game.Player.Character;
                 if (player == null || !player.Exists()) throw new InvalidOperationException("Player character is unavailable");
                 ped.Task.ClearAll();
-                ped.Task.FollowToOffsetOfEntity(player, Vector3.Zero, 2.0f, -1, 3.0f, true);
+                ped.Task.FollowToOffsetFromEntity(player, Vector3.Zero, 2.0f, -1, 3.0f, true);
             });
         }
 
@@ -274,12 +275,12 @@ namespace TitanTrainer.World
                 var player = Game.Player.Character;
                 if (player == null || !player.Exists()) throw new InvalidOperationException("Player character is unavailable");
                 ped.Task.ClearAll();
-                ped.Task.FollowToOffsetOfEntity(player, Vector3.Zero, 2.0f, -1, 3.0f, true);
+                ped.Task.FollowToOffsetFromEntity(player, Vector3.Zero, 2.0f, -1, 3.0f, true);
             }, "Trainer pedestrians are following you");
         }
 
-        public void MakeLastPedWander() => ApplyToLastPed("Pedestrian is wandering", ped => { ped.Task.ClearAll(); ped.Task.WanderAround(); });
-        public void MakeAllPedsWander() => ApplyToAllPeds(ped => { ped.Task.ClearAll(); ped.Task.WanderAround(); }, "Trainer pedestrians are wandering");
+        public void MakeLastPedWander() => ApplyToLastPed("Pedestrian is wandering", ped => { ped.Task.ClearAll(); ped.Task.Wander(); });
+        public void MakeAllPedsWander() => ApplyToAllPeds(ped => { ped.Task.ClearAll(); ped.Task.Wander(); }, "Trainer pedestrians are wandering");
         public void StopLastPed() => ApplyToLastPed("Pedestrian stopped", ped => ped.Task.ClearAll());
         public void StopAllPeds() => ApplyToAllPeds(ped => ped.Task.ClearAll(), "Trainer pedestrian tasks cleared");
 
@@ -290,7 +291,7 @@ namespace TitanTrainer.World
                 var player = Game.Player.Character;
                 if (player == null || !player.Exists()) throw new InvalidOperationException("Player character is unavailable");
                 ped.Task.ClearAll();
-                ped.Task.FightAgainst(player);
+                ped.Task.Combat(player);
             });
         }
 

@@ -17,6 +17,8 @@ C:\Users\patha\OneDrive\Documents\Programming\C#\TitanTrainer\TitanTrainer\obj\D
 C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\vehicles.json
 C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\favorites.json
 C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\config.json
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\scenes.json
+C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\Data\saved-locations.json
 C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.dll
 C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.pdb
 C:\Users\patha\Documents\Programming\C# Development\TitanTrainer\TitanTrainer\bin\Debug\net48\TitanTrainer.xml

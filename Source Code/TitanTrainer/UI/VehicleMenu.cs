@@ -22,7 +22,29 @@ namespace TitanTrainer.UI
         private readonly List<NativeMenu> _allMenus = new List<NativeMenu>();
         private readonly Dictionary<string, NativeMenu> _categoryMenus =
             new Dictionary<string, NativeMenu>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<NativeMenu, NativeMenu> _menuParents =
+            new Dictionary<NativeMenu, NativeMenu>();
         private NativeMenu _categoryMenu;
+        private NativeMenu _controlsMenu;
+        private NativeMenu _healthMenu;
+        private NativeMenu _vehicleTogglesMenu;
+        private NativeMenu _utilityMenu;
+        private NativeMenu _doorsMenu;
+        private NativeMenu _controlPerformanceMenu;
+        private NativeMenu _wheelsMenu;
+        private NativeMenu _wheelTypesMenu;
+        private NativeMenu _frontWheelsMenu;
+        private NativeMenu _rearWheelsMenu;
+        private NativeMenu _windowsMenu;
+        private NativeMenu _windowTintMenu;
+        private NativeMenu _colorsMenu;
+        private NativeMenu _bumpersMenu;
+        private NativeMenu _performanceMenu;
+        private NativeMenu _lightsMenu;
+        private NativeMenu _neonColorsMenu;
+        private NativeMenu _tireSmokeMenu;
+        private NativeMenu _liveryMenu;
+        private NativeMenu _otherModsMenu;
         private NativeMenu _presetMenu;
         private NativeMenu _savedPresetsMenu;
         private NativeMenu _favoritesMenu;
@@ -34,6 +56,9 @@ namespace TitanTrainer.UI
         private readonly VehiclePresetService _presetService;
 
         public NativeMenu Menu { get; }
+        public NativeMenu SpawnMenu { get; private set; }
+        public bool RootWasClosedByBackspace { get; private set; }
+        public void ClearRootBackspaceFlag() => RootWasClosedByBackspace = false;
         public IEnumerable<NativeMenu> AllMenus => _allMenus;
 
         public VehicleMenu(ServiceContainer services)
@@ -45,12 +70,22 @@ namespace TitanTrainer.UI
                 _services.Resolve<VehicleDatabase>(),
                 _services.Resolve<NotificationService>());
 
-            Menu = CreateMenu("Vehicle Spawner", "Vehicle controls and browsing");
+            Menu = CreateMenu("Vehicles", "Vehicle controls, customization, and spawner");
+            _controlsMenu = CreateMenu("Vehicle Controls", "Choose a vehicle-control category");
+            _healthMenu = CreateMenu("Vehicle Health", "Repair and clean the current vehicle");
+            _vehicleTogglesMenu = CreateMenu("Vehicle Toggles", "Enable or disable vehicle behaviors");
+            _utilityMenu = CreateMenu("Vehicle Utility", "Flip, clone, delete, or spawn a personal vehicle");
+            _doorsMenu = CreateMenu("Doors & Windows", "Open doors and operate vehicle windows");
+            _controlPerformanceMenu = CreateMenu("Performance", "Upgrade current vehicle performance");
+            SpawnMenu = CreateMenu("Vehicle Spawner", "Spawn and browse vehicles");
             BuildMenu();
+            BuildSpawnMenu();
             BuildCategoryMenus();
             BuildPresetMenus();
             BuildSearchAndHistoryMenus();
             BuildCustomizationMenus();
+            BuildRootMenu();
+            ConfigureNavigationParents();
         }
 
         private NativeMenu CreateMenu(string title, string subtitle)
@@ -60,79 +95,148 @@ namespace TitanTrainer.UI
             return menu;
         }
 
-        private void BuildMenu()
+        private void ConfigureNavigationParents()
+        {
+            SetParent(_controlsMenu, Menu);
+            SetParent(_healthMenu, _controlsMenu);
+            SetParent(_vehicleTogglesMenu, _controlsMenu);
+            SetParent(_utilityMenu, _controlsMenu);
+            SetParent(_doorsMenu, _controlsMenu);
+            SetParent(_controlPerformanceMenu, _controlsMenu);
+            SetParent(_customizationMenu, Menu);
+            SetParent(SpawnMenu, Menu);
+            SetParent(_categoryMenu, SpawnMenu);
+            foreach (var categoryMenu in _categoryMenus.Values)
+                SetParent(categoryMenu, _categoryMenu);
+            SetParent(_presetMenu, SpawnMenu);
+            SetParent(_savedPresetsMenu, _presetMenu);
+            SetParent(_favoritesMenu, _presetMenu);
+            SetParent(_searchResultsMenu, SpawnMenu);
+            SetParent(_recentVehiclesMenu, SpawnMenu);
+
+            SetParent(_wheelsMenu, _customizationMenu);
+            SetParent(_wheelTypesMenu, _wheelsMenu);
+            SetParent(_frontWheelsMenu, _wheelsMenu);
+            SetParent(_rearWheelsMenu, _wheelsMenu);
+            SetParent(_windowsMenu, _customizationMenu);
+            SetParent(_windowTintMenu, _windowsMenu);
+            SetParent(_colorsMenu, _customizationMenu);
+            SetParent(_bumpersMenu, _customizationMenu);
+            SetParent(_performanceMenu, _customizationMenu);
+            SetParent(_lightsMenu, _customizationMenu);
+            SetParent(_neonColorsMenu, _lightsMenu);
+            SetParent(_tireSmokeMenu, _lightsMenu);
+            SetParent(_liveryMenu, _customizationMenu);
+            SetParent(_otherModsMenu, _customizationMenu);
+            SetParent(_modSlotsMenu, _otherModsMenu);
+        }
+
+        private void BuildRootMenu()
         {
             Menu.Clear();
+            AddOpenMenuItem(Menu, "Vehicle Controls", "Repair, doors, vehicle toggles, and utility", _controlsMenu);
+            AddOpenMenuItem(Menu, "Customization", "Wheels, windows, colors, bumpers, lights, and upgrades", _customizationMenu);
+            AddOpenMenuItem(Menu, "Spawner", "Browse categories, search, recent vehicles, presets, and favorites", SpawnMenu);
+        }
+
+        private void AddOpenMenuItem(NativeMenu source, string title, string description, NativeMenu target)
+        {
+            var item = new NativeItem(title, description);
+            item.Activated += (s, e) => { HideAll(); target.Visible = true; };
+            source.Add(item);
+        }
+
+        private void SetParent(NativeMenu child, NativeMenu parent)
+        {
+            if (child != null && parent != null)
+                _menuParents[child] = parent;
+        }
+
+        /// <summary>
+        /// Handles keyboard Backspace for vehicle menus. Returns false when no vehicle
+        /// menu is visible so other trainer menus can process their own navigation.
+        /// </summary>
+        public bool HandleBackspace()
+        {
+            NativeMenu visibleMenu = _allMenus.FirstOrDefault(menu => menu.Visible);
+            if (visibleMenu == null)
+                return false;
+
+            RootWasClosedByBackspace = false;
+            if (_menuParents.TryGetValue(visibleMenu, out NativeMenu parent))
+            {
+                HideAll();
+                parent.Visible = true;
+            }
+            else
+            {
+                HideAll();
+                if (visibleMenu == Menu) RootWasClosedByBackspace = true;
+            }
+
+            return true;
+        }
+
+        private void BuildMenu()
+        {
+            _controlsMenu.Clear();
+            AddOpenMenuItem(_controlsMenu, "Vehicle Health", "Repair and clean the current vehicle", _healthMenu);
+            AddOpenMenuItem(_controlsMenu, "Vehicle Toggles", "God mode, turbo, engine, seatbelt, and more", _vehicleTogglesMenu);
+            AddOpenMenuItem(_controlsMenu, "Vehicle Utility", "Flip, clone, delete, or spawn a personal vehicle", _utilityMenu);
+            AddOpenMenuItem(_controlsMenu, "Doors & Windows", "Operate doors and windows", _doorsMenu);
+            AddOpenMenuItem(_controlsMenu, "Performance", "Upgrade the current vehicle", _controlPerformanceMenu);
 
             var repair = new NativeItem("Repair Vehicle", "Repair the current vehicle");
             repair.Activated += (s, e) => _vehicleManager.Health.Repair();
-            Menu.Add(repair);
-
+            _healthMenu.Add(repair);
             var clean = new NativeItem("Clean Vehicle", "Clean the current vehicle");
             clean.Activated += (s, e) => _vehicleManager.Health.Clean();
-            Menu.Add(clean);
-
-            Menu.Add(new NativeSeparatorItem("Vehicle Toggles"));
+            _healthMenu.Add(clean);
 
             var god = new NativeCheckboxItem("Vehicle God Mode", false);
             god.CheckboxChanged += (s, e) => _vehicleManager.Health.GodMode = god.Checked;
-            Menu.Add(god);
-
+            _vehicleTogglesMenu.Add(god);
             var autoRepair = new NativeCheckboxItem("Auto Repair", false);
             autoRepair.CheckboxChanged += (s, e) => _vehicleManager.Health.AutoRepair = autoRepair.Checked;
-            Menu.Add(autoRepair);
-
+            _vehicleTogglesMenu.Add(autoRepair);
             var tires = new NativeCheckboxItem("Invincible Tires", false);
             tires.CheckboxChanged += (s, e) => _vehicleManager.Health.InvincibleTires = tires.Checked;
-            Menu.Add(tires);
-
+            _vehicleTogglesMenu.Add(tires);
             var turbo = new NativeCheckboxItem("Turbo", false);
             turbo.CheckboxChanged += (s, e) => _vehicleManager.Performance.Turbo = turbo.Checked;
-            Menu.Add(turbo);
-
+            _vehicleTogglesMenu.Add(turbo);
             var boost = new NativeCheckboxItem("Boost", false);
             boost.CheckboxChanged += (s, e) => _vehicleManager.Performance.Boost = boost.Checked;
-            Menu.Add(boost);
-
+            _vehicleTogglesMenu.Add(boost);
             var rainbow = new NativeCheckboxItem("Rainbow Paint", false);
             rainbow.CheckboxChanged += (s, e) => _vehicleManager.Appearance.RainbowPaint = rainbow.Checked;
-            Menu.Add(rainbow);
-
+            _vehicleTogglesMenu.Add(rainbow);
             var neon = new NativeCheckboxItem("Neons", false);
             neon.CheckboxChanged += (s, e) => _vehicleManager.Appearance.Neons = neon.Checked;
-            Menu.Add(neon);
-
+            _vehicleTogglesMenu.Add(neon);
             var engine = new NativeCheckboxItem("Engine", true);
             engine.CheckboxChanged += (s, e) => _vehicleManager.Controls.Engine = engine.Checked;
-            Menu.Add(engine);
-
+            _vehicleTogglesMenu.Add(engine);
             var freeze = new NativeCheckboxItem("Freeze Vehicle", false);
             freeze.CheckboxChanged += (s, e) => _vehicleManager.Controls.FreezeVehicle = freeze.Checked;
-            Menu.Add(freeze);
-
+            _vehicleTogglesMenu.Add(freeze);
             var seatbelt = new NativeCheckboxItem("Seatbelt", false);
             seatbelt.CheckboxChanged += (s, e) => _vehicleManager.Controls.Seatbelt = seatbelt.Checked;
-            Menu.Add(seatbelt);
-
-            Menu.Add(new NativeSeparatorItem("Vehicle Utility"));
+            _vehicleTogglesMenu.Add(seatbelt);
 
             var flip = new NativeItem("Flip Vehicle");
             flip.Activated += (s, e) => _vehicleManager.Utility.FlipVehicle();
-            Menu.Add(flip);
-
+            _utilityMenu.Add(flip);
             var clone = new NativeItem("Clone Vehicle");
             clone.Activated += (s, e) => _vehicleManager.Utility.CloneVehicle();
-            Menu.Add(clone);
-
+            _utilityMenu.Add(clone);
             var delete = new NativeItem("Delete Vehicle");
             delete.Activated += (s, e) => _vehicleManager.Utility.DeleteVehicle();
-            Menu.Add(delete);
-
+            _utilityMenu.Add(delete);
             var personal = new NativeItem("Spawn Personal Vehicle");
             personal.Activated += (s, e) => _vehicleManager.Utility.SpawnPersonalVehicle();
-            Menu.Add(personal);
+            _utilityMenu.Add(personal);
 
-            Menu.Add(new NativeSeparatorItem("Doors & Windows"));
             AddDoorAction("Toggle Driver Door", 0);
             AddDoorAction("Toggle Passenger Door", 1);
             AddDoorAction("Toggle Rear Left Door", 2);
@@ -141,40 +245,38 @@ namespace TitanTrainer.UI
             AddDoorAction("Toggle Trunk", 5);
             var allDoors = new NativeItem("Open All Doors");
             allDoors.Activated += (s, e) => SetAllDoors(true);
-            Menu.Add(allDoors);
+            _doorsMenu.Add(allDoors);
             var closeDoors = new NativeItem("Close All Doors");
             closeDoors.Activated += (s, e) => SetAllDoors(false);
-            Menu.Add(closeDoors);
+            _doorsMenu.Add(closeDoors);
             var windowsDown = new NativeItem("Roll Down Windows");
             windowsDown.Activated += (s, e) => ForEachWindow(true);
-            Menu.Add(windowsDown);
+            _doorsMenu.Add(windowsDown);
             var windowsUp = new NativeItem("Roll Up Windows");
             windowsUp.Activated += (s, e) => ForEachWindow(false);
-            Menu.Add(windowsUp);
+            _doorsMenu.Add(windowsUp);
 
-            Menu.Add(new NativeSeparatorItem("Performance"));
             var maxUpgrade = new NativeItem("Max Upgrade");
             maxUpgrade.Activated += (s, e) => _vehicleManager.Performance.UpgradeVehicle();
-            Menu.Add(maxUpgrade);
+            _controlPerformanceMenu.Add(maxUpgrade);
+        }
 
-            Menu.Add(new NativeSeparatorItem("Vehicle Browser"));
+        private void BuildSpawnMenu()
+        {
+            SpawnMenu.Clear();
             var browse = new NativeItem("Browse Vehicles by Category", "Choose a category, then select a vehicle");
             browse.Activated += (s, e) =>
             {
                 HideAll();
                 _categoryMenu.Visible = true;
             };
-            Menu.Add(browse);
-
-            Menu.Add(new NativeSeparatorItem("Search & History"));
+            SpawnMenu.Add(browse);
             var searchVehicles = new NativeItem("Search Vehicles", "Search by display name, model name, or category");
             searchVehicles.Activated += (s, e) => SearchVehiclesFromPrompt();
-            Menu.Add(searchVehicles);
+            SpawnMenu.Add(searchVehicles);
             var recentVehicles = new NativeItem("Recently Spawned Vehicles", "Quickly spawn one of your recent vehicles again");
             recentVehicles.Activated += (s, e) => { RefreshRecentVehiclesMenu(); HideAll(); _recentVehiclesMenu.Visible = true; };
-            Menu.Add(recentVehicles);
-
-            Menu.Add(new NativeSeparatorItem("Presets & Favorites"));
+            SpawnMenu.Add(recentVehicles);
             var presets = new NativeItem("Vehicle Presets & Favorites", "Save, restore, and favorite vehicles");
             presets.Activated += (s, e) =>
             {
@@ -182,135 +284,179 @@ namespace TitanTrainer.UI
                 HideAll();
                 _presetMenu.Visible = true;
             };
-            Menu.Add(presets);
+            SpawnMenu.Add(presets);
 
-            Menu.Add(new NativeSeparatorItem("Advanced Customization"));
-            var customization = new NativeItem("Advanced Vehicle Customization", "Paint, wheels, lights, liveries, and individual mods");
-            customization.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
-            Menu.Add(customization);
         }
-
-
 
         private void BuildCustomizationMenus()
         {
-            _customizationMenu = CreateMenu("Advanced Vehicle Customization", "Customize the vehicle you are currently driving");
-            _modSlotsMenu = CreateMenu("Vehicle Mod Slots", "Select a slot to cycle its available modifications");
+            _customizationMenu = CreateMenu("Customization", "Choose a customization category");
+            _modSlotsMenu = CreateMenu("Vehicle Mod Slots", "Choose a supported modification slot");
+            _wheelsMenu = CreateMenu("Wheels", "Wheel types and wheel designs");
+            _wheelTypesMenu = CreateMenu("Wheel Type", "Choose the wheel category");
+            _frontWheelsMenu = CreateMenu("Front Wheels", "Cycle front wheel designs");
+            _rearWheelsMenu = CreateMenu("Rear Wheels", "Cycle rear wheel designs");
+            _windowsMenu = CreateMenu("Windows", "Glass tint and window controls");
+            _windowTintMenu = CreateMenu("Window Tint", "Choose the window tint");
+            _colorsMenu = CreateMenu("Colors", "Paint presets and color effects");
+            _bumpersMenu = CreateMenu("Bumpers", "Choose front and rear bumper modifications");
+            _performanceMenu = CreateMenu("Performance", "Engine, brakes, transmission, suspension, and armor");
+            _lightsMenu = CreateMenu("Lights & Effects", "Headlights, neons, and tire smoke");
+            _neonColorsMenu = CreateMenu("Neon Color", "Choose an underglow color");
+            _tireSmokeMenu = CreateMenu("Tire Smoke Color", "Choose a tire smoke color");
+            _liveryMenu = CreateMenu("Livery", "Vehicle livery options");
+            _otherModsMenu = CreateMenu("Other Modifications", "Additional vehicle-specific upgrade slots");
 
-            var paint = new NativeItem("Apply Gloss White Paint");
-            paint.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(0);
-            _customizationMenu.Add(paint);
-            var black = new NativeItem("Apply Gloss Black Paint");
-            black.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(1);
-            _customizationMenu.Add(black);
-            var red = new NativeItem("Apply Racing Red Paint");
-            red.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(2);
-            _customizationMenu.Add(red);
-            var blue = new NativeItem("Apply Electric Blue Paint");
-            blue.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(3);
-            _customizationMenu.Add(blue);
-            var green = new NativeItem("Apply Racing Green Paint");
-            green.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(4);
-            _customizationMenu.Add(green);
-            var purple = new NativeItem("Apply Neon Purple Paint");
-            purple.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(6);
-            _customizationMenu.Add(purple);
-            var twoTone = new NativeItem("Apply Red / Black Two-Tone");
+            AddOpenMenuItem(_customizationMenu, "Wheels", "Wheel type and front/rear wheel designs", _wheelsMenu);
+            AddOpenMenuItem(_customizationMenu, "Windows", "Window tint and window options", _windowsMenu);
+            AddOpenMenuItem(_customizationMenu, "Colors", "Paint presets and color effects", _colorsMenu);
+            AddOpenMenuItem(_customizationMenu, "Bumpers", "Front and rear bumper options", _bumpersMenu);
+            AddOpenMenuItem(_customizationMenu, "Performance", "Engine, brakes, transmission, suspension, and armor", _performanceMenu);
+            AddOpenMenuItem(_customizationMenu, "Lights & Effects", "Xenon, neon, and tire smoke", _lightsMenu);
+            AddOpenMenuItem(_customizationMenu, "Livery", "Cycle supported vehicle liveries", _liveryMenu);
+            AddOpenMenuItem(_customizationMenu, "Other Modifications", "Open additional vehicle-specific slots", _otherModsMenu);
+
+            AddWheelType("Sport Wheels", 0, _wheelTypesMenu);
+            AddWheelType("Muscle Car Wheels", 1, _wheelTypesMenu);
+            AddWheelType("Lowrider Wheels", 2, _wheelTypesMenu);
+            AddWheelType("SUV Wheels", 3, _wheelTypesMenu);
+            AddWheelType("Off-Road Wheels", 4, _wheelTypesMenu);
+            AddWheelType("Tuner Wheels", 5, _wheelTypesMenu);
+            AddWheelType("Bike Wheels", 6, _wheelTypesMenu);
+            AddWheelType("High-End Wheels", 7, _wheelTypesMenu);
+            AddCycleModItem(_frontWheelsMenu, "Cycle Front Wheel Design", 23);
+            AddCycleModItem(_rearWheelsMenu, "Cycle Rear Wheel Design", 24);
+            AddOpenMenuItem(_wheelsMenu, "Wheel Type", "Select a wheel category", _wheelTypesMenu);
+            AddOpenMenuItem(_wheelsMenu, "Front Wheel Design", "Browse front wheel design options", _frontWheelsMenu);
+            AddOpenMenuItem(_wheelsMenu, "Rear Wheel Design", "Browse rear wheel design options", _rearWheelsMenu);
+
+            AddOpenMenuItem(_windowsMenu, "Window Tint", "Choose tint shade", _windowTintMenu);
+            AddTint("No Tint", 0, _windowTintMenu);
+            AddTint("Light Smoke", 1, _windowTintMenu);
+            AddTint("Dark Smoke", 2, _windowTintMenu);
+            AddTint("Limo Tint", 3, _windowTintMenu);
+            AddTint("Green Tint", 4, _windowTintMenu);
+            AddTint("Factory Tint", 5, _windowTintMenu);
+            AddTint("Pure Black Tint", 6, _windowTintMenu);
+            var rollDown = new NativeItem("Roll Down All Windows");
+            rollDown.Activated += (s, e) => ForEachWindow(true);
+            _windowsMenu.Add(rollDown);
+            var rollUp = new NativeItem("Roll Up All Windows");
+            rollUp.Activated += (s, e) => ForEachWindow(false);
+            _windowsMenu.Add(rollUp);
+
+            AddColorPreset(_colorsMenu, "Gloss White", 0);
+            AddColorPreset(_colorsMenu, "Gloss Black", 1);
+            AddColorPreset(_colorsMenu, "Racing Red", 2);
+            AddColorPreset(_colorsMenu, "Electric Blue", 3);
+            AddColorPreset(_colorsMenu, "Racing Green", 4);
+            AddColorPreset(_colorsMenu, "Neon Purple", 6);
+            var twoTone = new NativeItem("Red / Black Two-Tone");
             twoTone.Activated += (s, e) => _vehicleManager.Appearance.ApplyTwoTonePreset(2, 1);
-            _customizationMenu.Add(twoTone);
+            _colorsMenu.Add(twoTone);
             var clearPaint = new NativeItem("Clear Custom Paint");
             clearPaint.Activated += (s, e) => _vehicleManager.Appearance.ClearCustomPaint();
-            _customizationMenu.Add(clearPaint);
+            _colorsMenu.Add(clearPaint);
+            var rainbow = new NativeCheckboxItem("Rainbow Paint", false);
+            rainbow.CheckboxChanged += (s, e) => _vehicleManager.Appearance.RainbowPaint = rainbow.Checked;
+            _colorsMenu.Add(rainbow);
 
-            _customizationMenu.Add(new NativeSeparatorItem("Wheel Categories"));
-            AddWheelType("Sport Wheels", 0);
-            AddWheelType("Muscle Car Wheels", 1);
-            AddWheelType("Lowrider Wheels", 2);
-            AddWheelType("SUV Wheels", 3);
-            AddWheelType("Off-Road Wheels", 4);
-            AddWheelType("Tuner Wheels", 5);
-            AddWheelType("Bike Wheels", 6);
-            AddWheelType("High-End Wheels", 7);
+            AddCycleModItem(_bumpersMenu, "Front Bumper", 1);
+            AddCycleModItem(_bumpersMenu, "Rear Bumper", 2);
+            AddCycleModItem(_performanceMenu, "Engine Upgrade", 11);
+            AddCycleModItem(_performanceMenu, "Brakes Upgrade", 12);
+            AddCycleModItem(_performanceMenu, "Transmission Upgrade", 13);
+            AddCycleModItem(_performanceMenu, "Suspension Upgrade", 15);
+            AddCycleModItem(_performanceMenu, "Armor Upgrade", 16);
+            var turbo = new NativeCheckboxItem("Turbo", false);
+            turbo.CheckboxChanged += (s, e) => _vehicleManager.Performance.Turbo = turbo.Checked;
+            _performanceMenu.Add(turbo);
+            var boost = new NativeCheckboxItem("Boost", false);
+            boost.CheckboxChanged += (s, e) => _vehicleManager.Performance.Boost = boost.Checked;
+            _performanceMenu.Add(boost);
+            var maxUpgrade = new NativeItem("Max Upgrade All");
+            maxUpgrade.Activated += (s, e) => _vehicleManager.Performance.UpgradeVehicle();
+            _performanceMenu.Add(maxUpgrade);
 
-            _customizationMenu.Add(new NativeSeparatorItem("Glass & Lighting"));
-            AddTint("No Tint", 0);
-            AddTint("Light Smoke Tint", 1);
-            AddTint("Dark Smoke Tint", 2);
-            AddTint("Limo Tint", 3);
-            AddTint("Green Tint", 4);
-            AddTint("Factory Tint", 5);
-            AddTint("Pure Black Tint", 6);
-            var xenon = new NativeItem("Enable Xenon Headlights");
-            xenon.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 0);
-            _customizationMenu.Add(xenon);
+            var xenonOn = new NativeItem("Enable Xenon Headlights");
+            xenonOn.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 0);
+            _lightsMenu.Add(xenonOn);
             var xenonBlue = new NativeItem("Xenon Color: Blue");
             xenonBlue.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 2);
-            _customizationMenu.Add(xenonBlue);
+            _lightsMenu.Add(xenonBlue);
             var xenonPurple = new NativeItem("Xenon Color: Purple");
             xenonPurple.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 12);
-            _customizationMenu.Add(xenonPurple);
+            _lightsMenu.Add(xenonPurple);
             var xenonOff = new NativeItem("Disable Xenon Headlights");
             xenonOff.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(false, 0);
-            _customizationMenu.Add(xenonOff);
+            _lightsMenu.Add(xenonOff);
+            AddOpenMenuItem(_lightsMenu, "Neon Color", "Choose underglow color", _neonColorsMenu);
+            AddOpenMenuItem(_lightsMenu, "Tire Smoke Color", "Choose tire smoke color", _tireSmokeMenu);
+            AddNeonColor("White", 0, _neonColorsMenu);
+            AddNeonColor("Red", 2, _neonColorsMenu);
+            AddNeonColor("Blue", 3, _neonColorsMenu);
+            AddNeonColor("Green", 4, _neonColorsMenu);
+            AddNeonColor("Purple", 6, _neonColorsMenu);
+            AddNeonColor("Pink", 8, _neonColorsMenu);
+            AddSmokeColor("White", 0, _tireSmokeMenu);
+            AddSmokeColor("Red", 2, _tireSmokeMenu);
+            AddSmokeColor("Blue", 3, _tireSmokeMenu);
+            AddSmokeColor("Green", 4, _tireSmokeMenu);
+            AddSmokeColor("Purple", 6, _tireSmokeMenu);
 
-            _customizationMenu.Add(new NativeSeparatorItem("Effects & Livery"));
-            AddNeonColor("Neon: White", 0);
-            AddNeonColor("Neon: Red", 2);
-            AddNeonColor("Neon: Blue", 3);
-            AddNeonColor("Neon: Green", 4);
-            AddNeonColor("Neon: Purple", 6);
-            AddNeonColor("Neon: Pink", 8);
-            AddSmokeColor("Tire Smoke: White", 0);
-            AddSmokeColor("Tire Smoke: Red", 2);
-            AddSmokeColor("Tire Smoke: Blue", 3);
-            AddSmokeColor("Tire Smoke: Green", 4);
-            AddSmokeColor("Tire Smoke: Purple", 6);
-            var livery = new NativeItem("Cycle Vehicle Livery");
-            livery.Activated += (s, e) => _vehicleManager.Appearance.CycleLivery();
-            _customizationMenu.Add(livery);
-
-            var modSlots = new NativeItem("Individual Mod Slots", "Open only the modification slots supported by this vehicle");
+            var cycleLivery = new NativeItem("Cycle Livery");
+            cycleLivery.Activated += (s, e) => _vehicleManager.Appearance.CycleLivery();
+            _liveryMenu.Add(cycleLivery);
+            var modSlots = new NativeItem("Vehicle-Specific Mod Slots", "Only slots supported by the current vehicle are shown");
             modSlots.Activated += (s, e) => { RefreshModSlotsMenu(); HideAll(); _modSlotsMenu.Visible = true; };
-            _customizationMenu.Add(new NativeSeparatorItem("Vehicle-Specific Modifications"));
-            _customizationMenu.Add(modSlots);
-
-            _customizationMenu.Add(new NativeSeparatorItem("Navigation"));
-            var back = new NativeItem("Back", "Return to Vehicle Spawner");
-            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
-            _customizationMenu.Add(back);
-
-            var modBack = new NativeItem("Back", "Return to Advanced Vehicle Customization");
-            modBack.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
-            _modSlotsMenu.Add(new NativeSeparatorItem("Navigation"));
-            _modSlotsMenu.Add(modBack);
+            _otherModsMenu.Add(modSlots);
+            AddCycleModItem(_otherModsMenu, "Spoiler", 0);
+            AddCycleModItem(_otherModsMenu, "Side Skirts", 3);
+            AddCycleModItem(_otherModsMenu, "Exhaust", 4);
+            AddCycleModItem(_otherModsMenu, "Hood", 7);
+            AddCycleModItem(_otherModsMenu, "Roof", 10);
         }
 
-        private void AddWheelType(string label, int wheelType)
+        private void AddWheelType(string label, int wheelType, NativeMenu target)
         {
             var item = new NativeItem(label);
             item.Activated += (s, e) => _vehicleManager.Appearance.SetWheelType(wheelType);
-            _customizationMenu.Add(item);
+            target.Add(item);
         }
 
-        private void AddTint(string label, int tint)
+        private void AddTint(string label, int tint, NativeMenu target)
         {
             var item = new NativeItem(label);
             item.Activated += (s, e) => _vehicleManager.Appearance.SetWindowTint(tint);
-            _customizationMenu.Add(item);
+            target.Add(item);
         }
 
-        private void AddNeonColor(string label, int index)
+        private void AddNeonColor(string label, int index, NativeMenu target)
         {
             var item = new NativeItem(label);
             item.Activated += (s, e) => _vehicleManager.Appearance.SetNeonColor(index);
-            _customizationMenu.Add(item);
+            target.Add(item);
         }
 
-        private void AddSmokeColor(string label, int index)
+        private void AddSmokeColor(string label, int index, NativeMenu target)
         {
             var item = new NativeItem(label);
             item.Activated += (s, e) => _vehicleManager.Appearance.SetTyreSmokeColor(index);
-            _customizationMenu.Add(item);
+            target.Add(item);
+        }
+
+        private void AddColorPreset(NativeMenu target, string label, int index)
+        {
+            var item = new NativeItem(label + " Paint");
+            item.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(index);
+            target.Add(item);
+        }
+
+        private void AddCycleModItem(NativeMenu target, string label, int slot)
+        {
+            var item = new NativeItem(label, "Activate to cycle to the next supported option");
+            item.Activated += (s, e) => _vehicleManager.Appearance.CycleMod(slot);
+            target.Add(item);
         }
 
         private void RefreshModSlotsMenu()
@@ -355,9 +501,8 @@ namespace TitanTrainer.UI
                     _modSlotsMenu.Add(none);
                 }
             }
-            var back = new NativeItem("Back", "Return to Advanced Vehicle Customization");
-            back.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
-            _modSlotsMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_modSlotsMenu);
             _modSlotsMenu.Add(back);
         }
 
@@ -374,7 +519,7 @@ namespace TitanTrainer.UI
             string query;
             try
             {
-                query = Game.GetUserInput(WindowTitle.FMMC_KEY_TIP8, _lastVehicleSearch ?? string.Empty, 32);
+                query = Game.GetUserInput(WindowTitle.EnterMessage60, _lastVehicleSearch ?? string.Empty, 32);
             }
             catch (Exception ex)
             {
@@ -429,13 +574,11 @@ namespace TitanTrainer.UI
                     _searchResultsMenu.Add(item);
                 }
             }
-
-            _searchResultsMenu.Add(new NativeSeparatorItem("Search"));
             var searchAgain = new NativeItem("Search Again", "Enter a different search query");
             searchAgain.Activated += (s, e) => SearchVehiclesFromPrompt();
             _searchResultsMenu.Add(searchAgain);
-            var back = new NativeItem("Back", "Return to Vehicle Spawner");
-            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_searchResultsMenu);
             _searchResultsMenu.Add(back);
         }
 
@@ -464,9 +607,8 @@ namespace TitanTrainer.UI
                     _recentVehiclesMenu.Add(item);
                 }
             }
-            var back = new NativeItem("Back", "Return to Vehicle Spawner");
-            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
-            _recentVehiclesMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_recentVehiclesMenu);
             _recentVehiclesMenu.Add(back);
         }
 
@@ -514,9 +656,8 @@ namespace TitanTrainer.UI
             };
             _presetMenu.Add(favorites);
 
-            var back = new NativeItem("Back", "Return to Vehicle Spawner");
-            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
-            _presetMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_presetMenu);
             _presetMenu.Add(back);
         }
 
@@ -544,9 +685,8 @@ namespace TitanTrainer.UI
                 };
                 _savedPresetsMenu.Add(delete);
             }
-            var back = new NativeItem("Back", "Return to Vehicle Presets");
-            back.Activated += (s, e) => { HideAll(); _presetMenu.Visible = true; };
-            _savedPresetsMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_savedPresetsMenu);
             _savedPresetsMenu.Add(back);
         }
 
@@ -574,9 +714,8 @@ namespace TitanTrainer.UI
                 };
                 _favoritesMenu.Add(remove);
             }
-            var back = new NativeItem("Back", "Return to Vehicle Presets");
-            back.Activated += (s, e) => { HideAll(); _presetMenu.Visible = true; };
-            _favoritesMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_favoritesMenu);
             _favoritesMenu.Add(back);
         }
 
@@ -620,13 +759,8 @@ namespace TitanTrainer.UI
                 AddCategory(new CategoryDefinition(category, new[] { category }), database);
             }
 
-            var back = new NativeItem("Back", "Return to Vehicle Spawner");
-            back.Activated += (s, e) =>
-            {
-                HideAll();
-                Menu.Visible = true;
-            };
-            _categoryMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Close vehicle menus");
+            back.Activated += (s, e) => NavigateBackFrom(_categoryMenu);
             _categoryMenu.Add(back);
         }
 
@@ -669,14 +803,8 @@ namespace TitanTrainer.UI
                     categorySubmenu.Add(item);
                 }
             }
-
-            categorySubmenu.Add(new NativeSeparatorItem("Navigation"));
-            var backToCategories = new NativeItem("Back", "Return to vehicle categories");
-            backToCategories.Activated += (s, e) =>
-            {
-                HideAll();
-                _categoryMenu.Visible = true;
-            };
+            var backToCategories = new NativeItem("Back", "Close vehicle menus");
+            backToCategories.Activated += (s, e) => NavigateBackFrom(categorySubmenu);
             categorySubmenu.Add(backToCategories);
         }
 
@@ -696,7 +824,7 @@ namespace TitanTrainer.UI
                 else
                     Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, vehicle.Handle, doorIndex, false, false);
             };
-            Menu.Add(item);
+            _doorsMenu.Add(item);
         }
 
         private void SetAllDoors(bool open)
@@ -759,6 +887,19 @@ namespace TitanTrainer.UI
             return (value ?? string.Empty).Trim().Replace('_', ' ').Replace('-', ' ');
         }
 
+        private void NavigateBackFrom(NativeMenu current)
+        {
+            if (current != null && _menuParents.TryGetValue(current, out NativeMenu parent))
+            {
+                HideAll();
+                parent.Visible = true;
+            }
+            else
+            {
+                HideAll();
+            }
+        }
+
         private void HideAll()
         {
             foreach (var menu in _allMenus)
@@ -769,6 +910,12 @@ namespace TitanTrainer.UI
         {
             HideAll();
             Menu.Visible = true;
+        }
+
+        public void ShowSpawner()
+        {
+            HideAll();
+            SpawnMenu.Visible = true;
         }
 
         public void Hide()

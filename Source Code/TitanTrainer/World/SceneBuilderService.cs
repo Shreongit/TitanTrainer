@@ -109,9 +109,9 @@ namespace TitanTrainer.World
 
                         Vector3 position = new Vector3(data.X, data.Y, data.Z);
                         Entity entity = null;
-                        if (data.Type == "prop") entity = GTA.World.CreateProp(model, position, true, true);
-                        else if (data.Type == "ped") entity = GTA.World.CreatePed(model, position);
-                        else if (data.Type == "vehicle") entity = GTA.World.CreateVehicle(model, position, data.Heading);
+                        if (data.Type == "prop") entity = Prop.Create(model, position, true, true);
+                        else if (data.Type == "ped") entity = Ped.Create(model, position, data.Heading);
+                        else if (data.Type == "vehicle") entity = Vehicle.Create(model, position, data.Heading);
                         model.MarkAsNoLongerNeeded();
                         if (entity == null || !entity.Exists()) continue;
                         entity.Rotation = new Vector3(data.Pitch, data.Roll, data.Heading);
