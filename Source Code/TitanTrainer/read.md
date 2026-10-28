@@ -97,3 +97,31 @@ Adds a dedicated **Entity Spawner** entry to the main menu, with separate **Prop
 ### Stage 5 validation
 
 The archive and source structure can be checked here, but this environment does not have the .NET Framework/MSBuild toolchain needed to compile against your local ScriptHookVDotNet and LemonUI assemblies. Build in Rider and test each model in GTA V Story Mode before treating the stage as release-ready. The prop/ped lists are curated starting points; model availability can vary with GTA V builds and installed DLC.
+
+
+## Stage 6 — Object placement and scene building
+
+- Move the last trainer-spawned prop relative to the player's facing direction (forward/back/left/right) or vertically.
+- Rotate the selected prop in 15-degree or 90-degree increments and reset rotation.
+- Duplicate the last prop while preserving its model and rotation.
+- Remove the last prop or all props tracked as spawned by Titan Trainer in the current script session.
+- Remove all tracked trainer-spawned pedestrians without deleting unrelated ambient entities.
+
+## Stage 7 — Ped management
+
+Adds a dedicated **Ped Management** submenu under Entity Spawner. Actions target either the last pedestrian spawned by Titan Trainer or the full set of trainer-tracked pedestrians:
+
+- Follow the player.
+- Wander around.
+- Stop / clear current tasks.
+- Order the last spawned pedestrian to fight the player or flee from the player for a limited duration.
+- Restore the last spawned pedestrian's health and set armor to 100.
+- Toggle invincibility on the last spawned pedestrian.
+- Apply follow, wander, or clear-tasks commands to all tracked pedestrians.
+- Delete all trainer-spawned pedestrians.
+
+Ped commands only affect pedestrians created and tracked by Titan Trainer; they do not search for or modify arbitrary ambient peds. Task commands can be interrupted by GTA V's AI, combat, mission logic, or entity state. Use these features in Story Mode/offline only.
+
+### Stage 7 validation status
+
+The source was updated and the archive/project structure can be statically validated. This environment does not provide the .NET Framework/MSBuild toolchain, so a successful compile and in-game behavior have not been confirmed. Build in Rider against your installed ScriptHookVDotNet 3 and LemonUI assemblies, then test each action in Story Mode before release.
