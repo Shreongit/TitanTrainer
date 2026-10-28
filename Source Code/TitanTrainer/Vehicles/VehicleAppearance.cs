@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GTA;
 using GTA.Native;
 using TitanTrainer.Utils;
@@ -13,6 +13,7 @@ namespace TitanTrainer.Vehicles
         private bool _neons;
 
         private int _rainbowIndex;
+        private int _rainbowFrameCounter;
 
         private readonly VehicleColor[] _colors =
         {
@@ -103,22 +104,27 @@ namespace TitanTrainer.Vehicles
             if (!_rainbowPaint)
                 return;
 
-            _rainbowIndex++;
+            // Script ticks can run every rendered frame. Throttle changes to avoid
+            // rapid flashing and avoid allocating a new Random instance every tick.
+            _rainbowFrameCounter++;
+            if (_rainbowFrameCounter < 10) return;
+            _rainbowFrameCounter = 0;
 
-            if (_rainbowIndex >= _colors.Length)
-                _rainbowIndex = 0;
-
+            _rainbowIndex = (_rainbowIndex + 1) % _colors.Length;
             vehicle.Mods.PrimaryColor = _colors[_rainbowIndex];
             vehicle.Mods.SecondaryColor = _colors[_rainbowIndex];
 
-            Random random = new Random();
-
-            Function.Call(
-                Hash.SET_VEHICLE_NEON_COLOUR,
-                vehicle.Handle,
-                random.Next(256),
-                random.Next(256),
-                random.Next(256));
+            // A stable palette keeps neon color synchronized with the paint cycle.
+            int[][] neonColors =
+            {
+                new[] { 255, 0, 0 }, new[] { 255, 96, 0 },
+                new[] { 255, 220, 0 }, new[] { 0, 220, 60 },
+                new[] { 0, 120, 255 }, new[] { 90, 0, 255 },
+                new[] { 220, 0, 255 }, new[] { 255, 255, 255 }
+            };
+            var neon = neonColors[_rainbowIndex];
+            Function.Call(Hash.SET_VEHICLE_NEON_COLOUR, vehicle.Handle,
+                neon[0], neon[1], neon[2]);
         }
     }
 }

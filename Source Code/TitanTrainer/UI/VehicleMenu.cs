@@ -190,18 +190,15 @@ namespace TitanTrainer.UI
         {
             try
             {
-                bool spawnInside = _services
-                    .Resolve<Config>()
-                    .SpawnDefaults
-                    .SpawnInside;
+                var config = _services.Resolve<Config>();
+                bool spawnInside = config.SpawnDefaults.SpawnInside;
+                bool maxUpgrade = config.SpawnDefaults.MaxUpgrade;
 
-                _vehicleManager.SpawnVehicle(
-                    vehicle,
-                    spawnInside);
-
-                _services.Resolve<NotificationService>()
-                    ?.NotifySuccess(
-                        $"Spawned {vehicle.DisplayName}");
+                if (_vehicleManager.SpawnVehicle(vehicle, spawnInside, maxUpgrade))
+                {
+                    _services.Resolve<NotificationService>()
+                        ?.NotifySuccess($"Spawned {vehicle.DisplayName}");
+                }
             }
             catch (Exception ex)
             {

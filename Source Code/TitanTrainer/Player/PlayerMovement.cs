@@ -1,4 +1,4 @@
-﻿using GTA;
+using GTA;
 using GTA.Native;
 using TitanTrainer.Core;
 using TitanTrainer.Utils;
@@ -75,7 +75,11 @@ namespace TitanTrainer.Player
             {
                 _invisible = value;
 
-                Game.Player.Character.IsVisible = !value;
+                Ped ped = Game.Player.Character;
+                if (ped != null && ped.Exists())
+                {
+                    ped.IsVisible = !value;
+                }
 
                 _notifications?.NotifyInfo(value
                     ? "Player Invisible"
@@ -86,11 +90,12 @@ namespace TitanTrainer.Player
         public void Update()
         {
             Ped ped = Game.Player.Character;
+            if (ped == null || !ped.Exists()) return;
 
             if (_infiniteStamina)
             {
-                // TODO: Implement using native for this SHVDN version.
-
+                // GTA's stamina restoration native accepts a player handle and amount.
+                Function.Call(Hash.RESTORE_PLAYER_STAMINA, Game.Player.Handle, 1.0f);
             }
 
             if (_fastRun)

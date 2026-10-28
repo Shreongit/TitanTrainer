@@ -76,22 +76,32 @@ namespace TitanTrainer.Vehicles
             }
         }
 
-        public void SpawnVehicle(VehicleDefinition def, bool spawnInside = true)
+        public bool SpawnVehicle(VehicleDefinition def, bool spawnInside = true, bool applyMaxUpgrade = false)
         {
-            if (def == null) return;
+            if (def == null)
+            {
+                _notificationService?.NotifyError("No vehicle was selected.");
+                return false;
+            }
+
             try
             {
-                var veh = _spawner.Spawn(def, spawnInside);
-                if (veh != null)
+                var vehicle = _spawner.Spawn(def, spawnInside, applyMaxUpgrade);
+                if (vehicle == null || !vehicle.Exists())
                 {
-                    _spawnHistory.Insert(0, def);
-                    if (_spawnHistory.Count > 30) _spawnHistory.RemoveAt(_spawnHistory.Count - 1);
+                    _notificationService?.NotifyError($"Could not spawn {def.DisplayName}. Check the model name and logs.");
+                    return false;
                 }
+
+                _spawnHistory.Insert(0, def);
+                if (_spawnHistory.Count > 30) _spawnHistory.RemoveAt(_spawnHistory.Count - 1);
+                return true;
             }
             catch (Exception ex)
             {
                 Logger.Error("SpawnVehicle failed: " + ex);
                 _notificationService?.NotifyError("Failed to spawn vehicle. See logs.");
+                return false;
             }
         }
 

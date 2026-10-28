@@ -1,4 +1,4 @@
-﻿# Titan Trainer
+# Titan Trainer
 
 Titan Trainer — modular, production-oriented GTA V single-player trainer built with ScriptHookVDotNet and LemonUI.
 
@@ -42,6 +42,9 @@ Titan Trainer — modular, production-oriented GTA V single-player trainer built
 - Data: JSON datasets and user-saved files.
 
 ## Roadmap
+
+- [x] Stage 1: startup/configuration/logging and disposal reliability.
+- [x] Stage 2: player stamina, vehicle spawning feedback, spawn upgrades, rainbow effects, and vehicle flag cleanup.
 
 - Vehicle preview pane (3D preview)
 - Advanced spawn options UI (colors, plates, xenon, neon, mods)

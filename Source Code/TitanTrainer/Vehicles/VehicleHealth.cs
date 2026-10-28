@@ -1,4 +1,4 @@
-﻿using GTA;
+using GTA;
 using GTA.Native;
 using TitanTrainer.Core;
 using TitanTrainer.Utils;
@@ -12,6 +12,7 @@ namespace TitanTrainer.Vehicles
         private bool _godMode;
         private bool _autoRepair;
         private bool _invincibleTires;
+        private Vehicle _lastVehicle;
 
         public VehicleHealth(NotificationService notifications)
         {
@@ -93,10 +94,20 @@ namespace TitanTrainer.Vehicles
 
         public void Update()
         {
-            Vehicle vehicle = Game.Player.Character.CurrentVehicle;
+            Vehicle vehicle = Game.Player.Character?.CurrentVehicle;
 
-            if (vehicle == null)
+            if (vehicle == null || !vehicle.Exists())
+            {
+                RestorePreviousVehicle();
                 return;
+            }
+
+            if (_lastVehicle != null && _lastVehicle.Exists() &&
+                _lastVehicle.Handle != vehicle.Handle)
+            {
+                RestoreVehicleFlags(_lastVehicle);
+            }
+            _lastVehicle = vehicle;
 
             if (_godMode)
             {
@@ -132,6 +143,28 @@ namespace TitanTrainer.Vehicles
                     Hash.SET_VEHICLE_TYRES_CAN_BURST,
                     vehicle.Handle,
                     true);
+            }
+        }
+
+        private void RestorePreviousVehicle()
+        {
+            if (_lastVehicle != null && _lastVehicle.Exists())
+            {
+                RestoreVehicleFlags(_lastVehicle);
+            }
+            _lastVehicle = null;
+        }
+
+        private void RestoreVehicleFlags(Vehicle vehicle)
+        {
+            try
+            {
+                vehicle.IsInvincible = false;
+                Function.Call(Hash.SET_VEHICLE_TYRES_CAN_BURST, vehicle.Handle, true);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Warn("Could not restore vehicle flags: " + ex.Message);
             }
         }
     }

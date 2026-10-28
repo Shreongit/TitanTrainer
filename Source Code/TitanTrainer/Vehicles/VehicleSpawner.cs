@@ -20,6 +20,8 @@ namespace TitanTrainer.Vehicles
         {
             if (def == null) throw new ArgumentNullException(nameof(def));
 
+            Model model = default(Model);
+            bool modelCreated = false;
             try
             {
                 var modelName = def.ModelName;
@@ -29,10 +31,11 @@ namespace TitanTrainer.Vehicles
                     return null;
                 }
 
-                var model = new Model(modelName);
-                if (!model.IsValid)
+                model = new Model(modelName);
+                modelCreated = true;
+                if (!model.IsValid || !model.IsVehicle)
                 {
-                    Logger.Warn($"Model {modelName} is not valid.");
+                    Logger.Warn($"Model '{modelName}' is not a valid vehicle model.");
                     return null;
                 }
 
@@ -51,16 +54,17 @@ namespace TitanTrainer.Vehicles
                 }
 
                 var player = Game.Player.Character;
-                var offset = player.ForwardVector * 5.0f;
-                var spawnPos = player.Position + offset;
-                var heading = player.Heading;
+                if (player == null || !player.Exists())
+                {
+                    Logger.Warn("Cannot spawn a vehicle because the player character is unavailable.");
+                    return null;
+                }
 
-                // Use Vehicle.Create per SHVDN3 guidance to avoid obsolete World.CreateVehicle
-                var vehicle = Vehicle.Create(model, spawnPos, heading);
+                var spawnPos = player.Position + player.ForwardVector * 5.0f;
+                var vehicle = Vehicle.Create(model, spawnPos, player.Heading);
                 if (vehicle == null || !vehicle.Exists())
                 {
-                    Logger.Error($"Vehicle.Create returned null for model '{modelName}'.");
-                    model.MarkAsNoLongerNeeded();
+                    Logger.Error($"Vehicle.Create returned no valid vehicle for model '{modelName}'.");
                     return null;
                 }
 
@@ -71,29 +75,29 @@ namespace TitanTrainer.Vehicles
                 {
                     try
                     {
-                        Function.Call(Hash.SET_VEHICLE_MOD_KIT, vehicle, 0);
-                        for (int modType = 0; modType <= 49; modType++)
+                        Function.Call(Hash.SET_VEHICLE_MOD_KIT, vehicle.Handle, 0);
+                        for (int modType = 0; modType < 50; modType++)
                         {
-                            var modCount = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, vehicle, modType);
+                            var modCount = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, vehicle.Handle, modType);
                             if (modCount > 0)
                             {
-                                Function.Call(Hash.SET_VEHICLE_MOD, vehicle, modType, modCount - 1, false);
+                                Function.Call(Hash.SET_VEHICLE_MOD, vehicle.Handle, modType, modCount - 1, false);
                             }
                         }
+                        Function.Call(Hash.TOGGLE_VEHICLE_MOD, vehicle.Handle, 18, true);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn("Failed to apply max upgrades: " + ex);
+                        Logger.Warn("Vehicle spawned, but maximum upgrades could not all be applied: " + ex.Message);
                     }
                 }
 
                 if (spawnInside)
                 {
-                    Game.Player.Character.SetIntoVehicle(vehicle, VehicleSeat.Driver);
+                    player.SetIntoVehicle(vehicle, VehicleSeat.Driver);
                 }
 
-                Logger.Info($"Spawned vehicle {def.DisplayName} ({def.ModelName}) at {spawnPos}.");
-                model.MarkAsNoLongerNeeded();
+                Logger.Info($"Spawned vehicle {def.DisplayName} ({modelName}) at {spawnPos}.");
                 return vehicle;
             }
             catch (Exception ex)
@@ -101,6 +105,19 @@ namespace TitanTrainer.Vehicles
                 Logger.Error("Vehicle spawn failed: " + ex);
                 return null;
             }
+            finally
+            {
+                // Release the requested model on every exit path, including errors/timeouts.
+                try
+                {
+                    if (modelCreated) model.MarkAsNoLongerNeeded();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn("Could not release vehicle model: " + ex.Message);
+                }
+            }
         }
+
     }
 }
