@@ -40,7 +40,10 @@ namespace TitanTrainer.UI
 
             // Register menus
             _pool.Add(_mainMenu.Menu);
-            _pool.Add(_vehicleMenu.Menu);
+            foreach (var vehicleMenu in _vehicleMenu.AllMenus)
+            {
+                _pool.Add(vehicleMenu);
+            }
             _pool.Add(_settingsMenu.Menu);
             _pool.Add(_weatherMenu.Menu);
             _pool.Add(_timeMenu.Menu);

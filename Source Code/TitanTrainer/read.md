@@ -57,3 +57,14 @@ Titan Trainer — modular, production-oriented GTA V single-player trainer built
 
 - JSON files load once at startup. Update Data/vehicles.json and restart the game to apply changes.
 - Logs are written to Logs/TitanTrainer/YYYY-MM-DD.log.
+
+## Stage 3 — Vehicle category navigation
+
+The vehicle browser is now split into separate menus:
+
+1. **Vehicle Spawner** — existing vehicle controls plus `Browse Vehicles by Category`.
+2. **Vehicle Categories** — Super, Sports, Bikes, Trailers, Trucks, Planes, Boats, and other categories present in `Data/vehicles.json`.
+3. **Category submenu** — only vehicles assigned to the selected category, with a `Back` item to return to the category list.
+
+The browser menus are registered with LemonUI's object pool. The catalogue includes additional common truck and trailer model entries. If a model is unavailable in the installed GTA V build, spawning may fail; trailer models may also spawn unattached and need a tow vehicle. Categories with no available entries remain visible and show an explanatory placeholder.
+
