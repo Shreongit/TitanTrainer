@@ -83,3 +83,17 @@ This release expands Titan Trainer with practical Story Mode trainer tools inspi
 ### Compatibility and testing
 
 Target framework remains .NET Framework 4.8 for ScriptHookVDotNet 3. The source was statically reviewed and project/data files were validated in this packaging environment, but compilation and in-game behavior must still be verified locally with the matching ScriptHookVDotNet/LemonUI versions. Use only in GTA V Story Mode/offline; do not use trainer functions in GTA Online.
+
+## Stage 5 — Entity Spawner
+
+Adds a dedicated **Entity Spawner** entry to the main menu, with separate **Prop Spawner** and **Pedestrian Spawner** submenus. Each submenu has explicit back navigation. The curated lists include common props (barrels, crates, cones, barriers, benches, chairs, umbrellas, tables, briefcases and pallets) and pedestrian archetypes (beachgoer, business people, tourist, hiker, skater, police officer, paramedic, firefighter and mechanic).
+
+- Props and pedestrians spawn a short distance in front of the player.
+- Model names are validated and requested before spawning; failed model loads produce a notification instead of attempting creation.
+- Pedestrians spawned by the trainer are made persistent and have ambient events blocked so they do not immediately wander off.
+- Each submenu can remove the most recently spawned prop or pedestrian created by Titan Trainer.
+- Entity creation and cleanup are guarded with exception logging and user-facing feedback.
+
+### Stage 5 validation
+
+The archive and source structure can be checked here, but this environment does not have the .NET Framework/MSBuild toolchain needed to compile against your local ScriptHookVDotNet and LemonUI assemblies. Build in Rider and test each model in GTA V Story Mode before treating the stage as release-ready. The prop/ped lists are curated starting points; model availability can vary with GTA V builds and installed DLC.

@@ -3,6 +3,7 @@ using LemonUI;
 using LemonUI.Menus;
 using TitanTrainer.Core;
 using TitanTrainer.Utils;
+using TitanTrainer.World;
 
 namespace TitanTrainer.UI
 {
@@ -21,6 +22,7 @@ namespace TitanTrainer.UI
         private readonly TimeMenu _timeMenu;
         private readonly WeaponsMenu _weaponsMenu;
         private readonly TeleportMenu _teleportMenu;
+        private readonly EntitySpawnerMenu _entitySpawnerMenu;
         
         private readonly ServiceContainer _services;
 
@@ -40,6 +42,7 @@ namespace TitanTrainer.UI
             _weaponsMenu = new WeaponsMenu(services.Resolve<NotificationService>(), () => { HideAllMenus(); _mainMenu.Show(); });
             var playerManager = services.Resolve<TitanTrainer.Player.PlayerManager>();
             _teleportMenu = new TeleportMenu(playerManager.Teleport, services.Resolve<NotificationService>(), () => { HideAllMenus(); _mainMenu.Show(); });
+            _entitySpawnerMenu = new EntitySpawnerMenu(services.Resolve<EntitySpawner>(), () => { HideAllMenus(); _mainMenu.Show(); });
             
            
 
@@ -56,6 +59,7 @@ namespace TitanTrainer.UI
             _pool.Add(_playerMenu.Menu);
             _pool.Add(_weaponsMenu.Menu);
             _pool.Add(_teleportMenu.Menu);
+            foreach (var entityMenu in _entitySpawnerMenu.AllMenus) _pool.Add(entityMenu);
             
             _mainMenu.Hide();
             _vehicleMenu.Hide();
@@ -65,6 +69,7 @@ namespace TitanTrainer.UI
             _playerMenu.Hide();
             _weaponsMenu.Hide();
             _teleportMenu.Hide();
+            _entitySpawnerMenu.Hide();
 
             BuildMainMenu();
         }
@@ -117,6 +122,10 @@ namespace TitanTrainer.UI
 
             _mainMenu.Menu.Add(vehicle);
             
+            var entities = new NativeItem("Entity Spawner", "Spawn props and pedestrians");
+            entities.Activated += (s, e) => { HideAllMenus(); _entitySpawnerMenu.Show(); };
+            _mainMenu.Menu.Add(entities);
+
             //------------------------------------------------
 // Weather
 //------------------------------------------------
@@ -185,7 +194,7 @@ namespace TitanTrainer.UI
             {
                 _services.Resolve<NotificationService>()
                     ?.NotifyInfo(
-                        "Titan Trainer\nVersion 0.4.0"
+                        "Titan Trainer\nVersion 0.5.0"
                     );
             };
 
@@ -204,6 +213,7 @@ namespace TitanTrainer.UI
             _settingsMenu.Hide();
             _weaponsMenu.Hide();
             _teleportMenu.Hide();
+            _entitySpawnerMenu.Hide();
         }
 
         //------------------------------------------------

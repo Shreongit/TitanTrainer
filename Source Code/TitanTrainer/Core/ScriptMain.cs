@@ -31,6 +31,7 @@ namespace TitanTrainer
         private readonly TimeManager _timeManager;
         
         private readonly PlayerManager _playerManager;
+        private readonly EntitySpawner _entitySpawner;
 
         private readonly MenuManager _menuManager;
 
@@ -76,6 +77,10 @@ namespace TitanTrainer
                 // Player System
                 _playerManager = new PlayerManager(_notificationService);
                 _services.Register(_playerManager);
+
+                // Entity spawning (props and pedestrians)
+                _entitySpawner = new EntitySpawner(_notificationService);
+                _services.Register(_entitySpawner);
 
                 // UI
                 _menuManager = new MenuManager(_services);
@@ -165,6 +170,7 @@ namespace TitanTrainer
                 _weatherManager?.Dispose();
                 _timeManager?.Dispose();
                 _playerManager?.Dispose();
+                _entitySpawner?.Dispose();
 
                 _vehicleManager?.Dispose();
                 _vehicleDatabase?.Dispose();
