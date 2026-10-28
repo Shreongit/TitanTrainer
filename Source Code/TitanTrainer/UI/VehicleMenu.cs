@@ -26,6 +26,8 @@ namespace TitanTrainer.UI
         private NativeMenu _presetMenu;
         private NativeMenu _savedPresetsMenu;
         private NativeMenu _favoritesMenu;
+        private NativeMenu _customizationMenu;
+        private NativeMenu _modSlotsMenu;
         private readonly VehiclePresetService _presetService;
 
         public NativeMenu Menu { get; }
@@ -44,6 +46,7 @@ namespace TitanTrainer.UI
             BuildMenu();
             BuildCategoryMenus();
             BuildPresetMenus();
+            BuildCustomizationMenus();
         }
 
         private NativeMenu CreateMenu(string title, string subtitle)
@@ -168,8 +171,183 @@ namespace TitanTrainer.UI
                 _presetMenu.Visible = true;
             };
             Menu.Add(presets);
+
+            Menu.Add(new NativeSeparatorItem("Advanced Customization"));
+            var customization = new NativeItem("Advanced Vehicle Customization", "Paint, wheels, lights, liveries, and individual mods");
+            customization.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
+            Menu.Add(customization);
         }
 
+
+
+        private void BuildCustomizationMenus()
+        {
+            _customizationMenu = CreateMenu("Advanced Vehicle Customization", "Customize the vehicle you are currently driving");
+            _modSlotsMenu = CreateMenu("Vehicle Mod Slots", "Select a slot to cycle its available modifications");
+
+            var paint = new NativeItem("Apply Gloss White Paint");
+            paint.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(0);
+            _customizationMenu.Add(paint);
+            var black = new NativeItem("Apply Gloss Black Paint");
+            black.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(1);
+            _customizationMenu.Add(black);
+            var red = new NativeItem("Apply Racing Red Paint");
+            red.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(2);
+            _customizationMenu.Add(red);
+            var blue = new NativeItem("Apply Electric Blue Paint");
+            blue.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(3);
+            _customizationMenu.Add(blue);
+            var green = new NativeItem("Apply Racing Green Paint");
+            green.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(4);
+            _customizationMenu.Add(green);
+            var purple = new NativeItem("Apply Neon Purple Paint");
+            purple.Activated += (s, e) => _vehicleManager.Appearance.ApplyColorPreset(6);
+            _customizationMenu.Add(purple);
+            var twoTone = new NativeItem("Apply Red / Black Two-Tone");
+            twoTone.Activated += (s, e) => _vehicleManager.Appearance.ApplyTwoTonePreset(2, 1);
+            _customizationMenu.Add(twoTone);
+            var clearPaint = new NativeItem("Clear Custom Paint");
+            clearPaint.Activated += (s, e) => _vehicleManager.Appearance.ClearCustomPaint();
+            _customizationMenu.Add(clearPaint);
+
+            _customizationMenu.Add(new NativeSeparatorItem("Wheel Categories"));
+            AddWheelType("Sport Wheels", 0);
+            AddWheelType("Muscle Car Wheels", 1);
+            AddWheelType("Lowrider Wheels", 2);
+            AddWheelType("SUV Wheels", 3);
+            AddWheelType("Off-Road Wheels", 4);
+            AddWheelType("Tuner Wheels", 5);
+            AddWheelType("Bike Wheels", 6);
+            AddWheelType("High-End Wheels", 7);
+
+            _customizationMenu.Add(new NativeSeparatorItem("Glass & Lighting"));
+            AddTint("No Tint", 0);
+            AddTint("Light Smoke Tint", 1);
+            AddTint("Dark Smoke Tint", 2);
+            AddTint("Limo Tint", 3);
+            AddTint("Green Tint", 4);
+            AddTint("Factory Tint", 5);
+            AddTint("Pure Black Tint", 6);
+            var xenon = new NativeItem("Enable Xenon Headlights");
+            xenon.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 0);
+            _customizationMenu.Add(xenon);
+            var xenonBlue = new NativeItem("Xenon Color: Blue");
+            xenonBlue.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 2);
+            _customizationMenu.Add(xenonBlue);
+            var xenonPurple = new NativeItem("Xenon Color: Purple");
+            xenonPurple.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(true, 12);
+            _customizationMenu.Add(xenonPurple);
+            var xenonOff = new NativeItem("Disable Xenon Headlights");
+            xenonOff.Activated += (s, e) => _vehicleManager.Appearance.SetXenon(false, 0);
+            _customizationMenu.Add(xenonOff);
+
+            _customizationMenu.Add(new NativeSeparatorItem("Effects & Livery"));
+            AddNeonColor("Neon: White", 0);
+            AddNeonColor("Neon: Red", 2);
+            AddNeonColor("Neon: Blue", 3);
+            AddNeonColor("Neon: Green", 4);
+            AddNeonColor("Neon: Purple", 6);
+            AddNeonColor("Neon: Pink", 8);
+            AddSmokeColor("Tire Smoke: White", 0);
+            AddSmokeColor("Tire Smoke: Red", 2);
+            AddSmokeColor("Tire Smoke: Blue", 3);
+            AddSmokeColor("Tire Smoke: Green", 4);
+            AddSmokeColor("Tire Smoke: Purple", 6);
+            var livery = new NativeItem("Cycle Vehicle Livery");
+            livery.Activated += (s, e) => _vehicleManager.Appearance.CycleLivery();
+            _customizationMenu.Add(livery);
+
+            var modSlots = new NativeItem("Individual Mod Slots", "Open only the modification slots supported by this vehicle");
+            modSlots.Activated += (s, e) => { RefreshModSlotsMenu(); HideAll(); _modSlotsMenu.Visible = true; };
+            _customizationMenu.Add(new NativeSeparatorItem("Vehicle-Specific Modifications"));
+            _customizationMenu.Add(modSlots);
+
+            _customizationMenu.Add(new NativeSeparatorItem("Navigation"));
+            var back = new NativeItem("Back", "Return to Vehicle Spawner");
+            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
+            _customizationMenu.Add(back);
+
+            var modBack = new NativeItem("Back", "Return to Advanced Vehicle Customization");
+            modBack.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
+            _modSlotsMenu.Add(new NativeSeparatorItem("Navigation"));
+            _modSlotsMenu.Add(modBack);
+        }
+
+        private void AddWheelType(string label, int wheelType)
+        {
+            var item = new NativeItem(label);
+            item.Activated += (s, e) => _vehicleManager.Appearance.SetWheelType(wheelType);
+            _customizationMenu.Add(item);
+        }
+
+        private void AddTint(string label, int tint)
+        {
+            var item = new NativeItem(label);
+            item.Activated += (s, e) => _vehicleManager.Appearance.SetWindowTint(tint);
+            _customizationMenu.Add(item);
+        }
+
+        private void AddNeonColor(string label, int index)
+        {
+            var item = new NativeItem(label);
+            item.Activated += (s, e) => _vehicleManager.Appearance.SetNeonColor(index);
+            _customizationMenu.Add(item);
+        }
+
+        private void AddSmokeColor(string label, int index)
+        {
+            var item = new NativeItem(label);
+            item.Activated += (s, e) => _vehicleManager.Appearance.SetTyreSmokeColor(index);
+            _customizationMenu.Add(item);
+        }
+
+        private void RefreshModSlotsMenu()
+        {
+            _modSlotsMenu.Clear();
+            var vehicle = Game.Player.Character?.CurrentVehicle;
+            if (vehicle == null || !vehicle.Exists())
+            {
+                var noVehicle = new NativeItem("Enter a vehicle first", "Mod slots are vehicle-specific");
+                noVehicle.Enabled = false;
+                _modSlotsMenu.Add(noVehicle);
+            }
+            else
+            {
+                string[] names =
+                {
+                    "Spoilers", "Front Bumper", "Rear Bumper", "Side Skirts", "Exhaust", "Frame", "Grille", "Hood",
+                    "Left Fender", "Right Fender", "Roof", "Engine", "Brakes", "Transmission", "Horns", "Suspension",
+                    "Armor", "Unknown Slot 17", "Turbo Toggle (use Vehicle Toggles)", "Subwoofer", "Tire Smoke Toggle",
+                    "Hydraulics Toggle", "Xenon Toggle", "Front Wheels", "Rear Wheels", "Plate Holders", "Vanity Plates",
+                    "Interior Trim", "Ornaments", "Dashboard", "Dial Design", "Door Speakers", "Seats", "Steering Wheel",
+                    "Shifter", "Plaques", "Speakers", "Trunk", "Hydraulics", "Engine Block", "Air Filter", "Struts",
+                    "Arch Covers", "Aerials", "Exterior Trim", "Tank", "Windows", "Livery Mod", "Unknown Slot 47", "Unknown Slot 48"
+                };
+                bool hasMods = false;
+                for (int slot = 0; slot < names.Length; slot++)
+                {
+                    int capturedSlot = slot;
+                    // Toggle mods are controlled through dedicated toggles, not indexed mod lists.
+                    if (slot == 18 || slot == 20 || slot == 21 || slot == 22) continue;
+                    int count = _vehicleManager.Appearance.GetModCount(slot);
+                    if (count <= 0) continue;
+                    hasMods = true;
+                    var item = new NativeItem(names[slot], count + " available options; activate to cycle");
+                    item.Activated += (s, e) => _vehicleManager.Appearance.CycleMod(capturedSlot);
+                    _modSlotsMenu.Add(item);
+                }
+                if (!hasMods)
+                {
+                    var none = new NativeItem("No standard mod slots available", "This vehicle may use a different customization system");
+                    none.Enabled = false;
+                    _modSlotsMenu.Add(none);
+                }
+            }
+            var back = new NativeItem("Back", "Return to Advanced Vehicle Customization");
+            back.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
+            _modSlotsMenu.Add(new NativeSeparatorItem("Navigation"));
+            _modSlotsMenu.Add(back);
+        }
 
         private void BuildPresetMenus()
         {
