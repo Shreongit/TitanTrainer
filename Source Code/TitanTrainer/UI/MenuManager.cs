@@ -23,6 +23,7 @@ namespace TitanTrainer.UI
         private readonly WeaponsMenu _weaponsMenu;
         private readonly TeleportMenu _teleportMenu;
         private readonly EntitySpawnerMenu _entitySpawnerMenu;
+        private readonly SceneBuilderMenu _sceneBuilderMenu;
         
         private readonly ServiceContainer _services;
 
@@ -43,6 +44,7 @@ namespace TitanTrainer.UI
             var playerManager = services.Resolve<TitanTrainer.Player.PlayerManager>();
             _teleportMenu = new TeleportMenu(playerManager.Teleport, services.Resolve<NotificationService>(), () => { HideAllMenus(); _mainMenu.Show(); });
             _entitySpawnerMenu = new EntitySpawnerMenu(services.Resolve<EntitySpawner>(), () => { HideAllMenus(); _mainMenu.Show(); });
+            _sceneBuilderMenu = new SceneBuilderMenu(services.Resolve<SceneBuilderService>(), () => { HideAllMenus(); _mainMenu.Show(); });
             
            
 
@@ -60,6 +62,7 @@ namespace TitanTrainer.UI
             _pool.Add(_weaponsMenu.Menu);
             _pool.Add(_teleportMenu.Menu);
             foreach (var entityMenu in _entitySpawnerMenu.AllMenus) _pool.Add(entityMenu);
+            foreach (var sceneMenu in _sceneBuilderMenu.AllMenus) _pool.Add(sceneMenu);
             
             _mainMenu.Hide();
             _vehicleMenu.Hide();
@@ -70,6 +73,7 @@ namespace TitanTrainer.UI
             _weaponsMenu.Hide();
             _teleportMenu.Hide();
             _entitySpawnerMenu.Hide();
+            _sceneBuilderMenu.Hide();
 
             BuildMainMenu();
         }
@@ -125,6 +129,10 @@ namespace TitanTrainer.UI
             var entities = new NativeItem("Entity Spawner", "Spawn props and pedestrians");
             entities.Activated += (s, e) => { HideAllMenus(); _entitySpawnerMenu.Show(); };
             _mainMenu.Menu.Add(entities);
+
+            var sceneBuilder = new NativeItem("Scene Builder", "Save and load arrangements of props, pedestrians, and vehicles");
+            sceneBuilder.Activated += (s, e) => { HideAllMenus(); _sceneBuilderMenu.Show(); };
+            _mainMenu.Menu.Add(sceneBuilder);
 
             //------------------------------------------------
 // Weather
@@ -214,6 +222,7 @@ namespace TitanTrainer.UI
             _weaponsMenu.Hide();
             _teleportMenu.Hide();
             _entitySpawnerMenu.Hide();
+            _sceneBuilderMenu.Hide();
         }
 
         //------------------------------------------------

@@ -32,6 +32,7 @@ namespace TitanTrainer
         
         private readonly PlayerManager _playerManager;
         private readonly EntitySpawner _entitySpawner;
+        private readonly SceneBuilderService _sceneBuilderService;
 
         private readonly MenuManager _menuManager;
 
@@ -81,6 +82,9 @@ namespace TitanTrainer
                 // Entity spawning (props and pedestrians)
                 _entitySpawner = new EntitySpawner(_notificationService);
                 _services.Register(_entitySpawner);
+
+                _sceneBuilderService = new SceneBuilderService(_entitySpawner, _notificationService, "Data/scenes.json");
+                _services.Register(_sceneBuilderService);
 
                 // UI
                 _menuManager = new MenuManager(_services);

@@ -123,6 +123,30 @@ namespace TitanTrainer.World
             }
         }
 
+        /// <summary>Captures only entities created and tracked by Titan Trainer, never arbitrary world entities.</summary>
+        public List<SceneEntityData> CaptureTrackedEntities()
+        {
+            var result = new List<SceneEntityData>();
+            CaptureTracked(_spawnedProps, "prop", result);
+            CaptureTracked(_spawnedPeds, "ped", result);
+            return result;
+        }
+
+        private static void CaptureTracked<T>(IEnumerable<T> entities, string type, List<SceneEntityData> result) where T : Entity
+        {
+            foreach (var entity in entities)
+            {
+                try
+                {
+                    if (entity == null || !entity.Exists()) continue;
+                    var p = entity.Position;
+                    var r = entity.Rotation;
+                    result.Add(new SceneEntityData { Type = type, ModelHash = entity.Model.Hash, X = p.X, Y = p.Y, Z = p.Z, Pitch = r.X, Roll = r.Y, Heading = entity.Heading });
+                }
+                catch (Exception ex) { Logger.Warn("Scene capture skipped an entity: " + ex.Message); }
+            }
+        }
+
         public void DeleteLastProp()
         {
             DeleteEntity(_lastProp, "Last spawned prop removed");
