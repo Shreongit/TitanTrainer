@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using GTA;
 using LemonUI.Menus;
 using TitanTrainer.Utils;
 using TitanTrainer.World;
@@ -13,6 +16,7 @@ namespace TitanTrainer.UI
         private readonly NativeMenu _peds;
         private readonly ObjectPlacementMenu _placementMenu;
         private readonly NativeMenu _pedManagement;
+        private readonly NativeMenu _searchResults;
         private readonly Action _goBack;
 
         public NativeMenu[] AllMenus { get; }
@@ -25,11 +29,16 @@ namespace TitanTrainer.UI
             _props = new NativeMenu("Titan Trainer", "Prop Spawner");
             _peds = new NativeMenu("Titan Trainer", "Pedestrian Spawner");
             _pedManagement = new NativeMenu("Titan Trainer", "Ped Management");
+            _searchResults = new NativeMenu("Entity Search Results", "Matching props and pedestrian models");
             _placementMenu = new ObjectPlacementMenu(spawner, () => { HideAll(); Show(); });
             _props.Visible = false;
             _peds.Visible = false;
-            AllMenus = new[] { Menu, _props, _peds, _pedManagement, _placementMenu.Menu };
+            _searchResults.Visible = false;
+            AllMenus = new[] { Menu, _props, _peds, _pedManagement, _searchResults, _placementMenu.Menu };
 
+            var search = new NativeItem("Search Entity Catalog", "Search prop and pedestrian names or model identifiers");
+            search.Activated += (s, e) => SearchCatalog();
+            Menu.Add(search);
             AddSubmenu("Prop Spawner", "Spawn useful props in front of the player", _props);
             AddSubmenu("Pedestrian Spawner", "Spawn selected pedestrians in front of the player", _peds);
             AddSubmenu("Ped Management", "Control tasks and health for trainer-spawned pedestrians", _pedManagement);
@@ -128,12 +137,104 @@ namespace TitanTrainer.UI
             menu.Add(back);
         }
 
+        private void SearchCatalog()
+        {
+            string query;
+            try
+            {
+                query = Game.GetUserInput(WindowTitle.FMMC_KEY_TIP8, string.Empty, 32);
+            }
+            catch (Exception)
+            {
+                // If the game input prompt is unavailable, leave the current menu unchanged.
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(query)) return;
+            query = query.Trim();
+            _searchResults.Clear();
+
+            var entries = new List<EntitySearchEntry>
+            {
+                new EntitySearchEntry("Barrel", "prop_barrel_02a", false),
+                new EntitySearchEntry("Wooden Crate", "prop_box_wood02a_pu", false),
+                new EntitySearchEntry("Road Cone", "prop_roadcone02a", false),
+                new EntitySearchEntry("Barrier", "prop_barrier_work05", false),
+                new EntitySearchEntry("Bench", "prop_bench_01a", false),
+                new EntitySearchEntry("Camp Chair", "prop_skid_chair_02", false),
+                new EntitySearchEntry("Beach Umbrella", "prop_parasol_04e", false),
+                new EntitySearchEntry("Small Table", "prop_table_03", false),
+                new EntitySearchEntry("Briefcase", "prop_ld_case_01", false),
+                new EntitySearchEntry("Pallet", "prop_pallet_02a", false),
+                new EntitySearchEntry("Beach Male", "a_m_y_beach_01", true),
+                new EntitySearchEntry("Business Male", "a_m_y_business_01", true),
+                new EntitySearchEntry("Business Female", "a_f_y_business_01", true),
+                new EntitySearchEntry("Tourist Male", "a_m_y_tourist_01", true),
+                new EntitySearchEntry("Hiker", "a_m_y_hiker_01", true),
+                new EntitySearchEntry("Skater", "a_m_y_skater_01", true),
+                new EntitySearchEntry("Police Officer", "s_m_y_cop_01", true),
+                new EntitySearchEntry("Paramedic", "s_m_m_paramedic_01", true),
+                new EntitySearchEntry("Firefighter", "s_m_y_fireman_01", true),
+                new EntitySearchEntry("Mechanic", "s_m_m_autoshop_02", true)
+            };
+
+            var matches = entries.Where(x => x.Label.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                             x.Model.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                                 .Take(60).ToList();
+            if (matches.Count == 0)
+            {
+                var empty = new NativeItem("No matching entities", "Try a prop name, ped name, or model identifier");
+                empty.Enabled = false;
+                _searchResults.Add(empty);
+            }
+            else
+            {
+                _searchResults.Add(new NativeItem("Search: " + query, matches.Count + " result(s)") { Enabled = false });
+                foreach (var match in matches)
+                {
+                    var captured = match;
+                    var item = new NativeItem(captured.Label, (captured.IsPed ? "Pedestrian · " : "Prop · ") + captured.Model);
+                    item.Activated += (s, e) =>
+                    {
+                        if (captured.IsPed) _spawner.SpawnPed(captured.Model, captured.Label);
+                        else _spawner.SpawnProp(captured.Model, captured.Label);
+                    };
+                    _searchResults.Add(item);
+                }
+            }
+
+            _searchResults.Add(new NativeSeparatorItem("Navigation"));
+            var searchAgain = new NativeItem("Search Again", "Enter another query");
+            searchAgain.Activated += (s, e) => SearchCatalog();
+            _searchResults.Add(searchAgain);
+            var back = new NativeItem("Back to Entity Spawner", "Return to the previous menu");
+            back.Activated += (s, e) => { HideAll(); Show(); };
+            _searchResults.Add(back);
+            HideAll();
+            _searchResults.Visible = true;
+        }
+
+        private sealed class EntitySearchEntry
+        {
+            public string Label { get; }
+            public string Model { get; }
+            public bool IsPed { get; }
+
+            public EntitySearchEntry(string label, string model, bool isPed)
+            {
+                Label = label;
+                Model = model;
+                IsPed = isPed;
+            }
+        }
+
         private void HideAll()
         {
             Menu.Visible = false;
             _props.Visible = false;
             _peds.Visible = false;
             _pedManagement.Visible = false;
+            _searchResults.Visible = false;
             _placementMenu.Hide();
         }
 

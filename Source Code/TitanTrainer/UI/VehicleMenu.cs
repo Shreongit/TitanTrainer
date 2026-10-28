@@ -28,6 +28,9 @@ namespace TitanTrainer.UI
         private NativeMenu _favoritesMenu;
         private NativeMenu _customizationMenu;
         private NativeMenu _modSlotsMenu;
+        private NativeMenu _searchResultsMenu;
+        private NativeMenu _recentVehiclesMenu;
+        private string _lastVehicleSearch = string.Empty;
         private readonly VehiclePresetService _presetService;
 
         public NativeMenu Menu { get; }
@@ -46,6 +49,7 @@ namespace TitanTrainer.UI
             BuildMenu();
             BuildCategoryMenus();
             BuildPresetMenus();
+            BuildSearchAndHistoryMenus();
             BuildCustomizationMenus();
         }
 
@@ -161,6 +165,14 @@ namespace TitanTrainer.UI
                 _categoryMenu.Visible = true;
             };
             Menu.Add(browse);
+
+            Menu.Add(new NativeSeparatorItem("Search & History"));
+            var searchVehicles = new NativeItem("Search Vehicles", "Search by display name, model name, or category");
+            searchVehicles.Activated += (s, e) => SearchVehiclesFromPrompt();
+            Menu.Add(searchVehicles);
+            var recentVehicles = new NativeItem("Recently Spawned Vehicles", "Quickly spawn one of your recent vehicles again");
+            recentVehicles.Activated += (s, e) => { RefreshRecentVehiclesMenu(); HideAll(); _recentVehiclesMenu.Visible = true; };
+            Menu.Add(recentVehicles);
 
             Menu.Add(new NativeSeparatorItem("Presets & Favorites"));
             var presets = new NativeItem("Vehicle Presets & Favorites", "Save, restore, and favorite vehicles");
@@ -347,6 +359,115 @@ namespace TitanTrainer.UI
             back.Activated += (s, e) => { HideAll(); _customizationMenu.Visible = true; };
             _modSlotsMenu.Add(new NativeSeparatorItem("Navigation"));
             _modSlotsMenu.Add(back);
+        }
+
+        private void BuildSearchAndHistoryMenus()
+        {
+            _searchResultsMenu = CreateMenu("Vehicle Search Results", "Search results from the vehicle catalogue");
+            _recentVehiclesMenu = CreateMenu("Recently Spawned Vehicles", "Most recently spawned vehicles first");
+            BuildSearchResultsMenu(string.Empty);
+            RefreshRecentVehiclesMenu();
+        }
+
+        private void SearchVehiclesFromPrompt()
+        {
+            string query;
+            try
+            {
+                query = Game.GetUserInput(WindowTitle.FMMC_KEY_TIP8, _lastVehicleSearch ?? string.Empty, 32);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Vehicle search prompt failed: " + ex);
+                _services.Resolve<NotificationService>()?.NotifyError("Could not open vehicle search prompt.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                _services.Resolve<NotificationService>()?.NotifyInfo("Vehicle search cancelled or empty.");
+                return;
+            }
+
+            _lastVehicleSearch = query.Trim();
+            BuildSearchResultsMenu(_lastVehicleSearch);
+            HideAll();
+            _searchResultsMenu.Visible = true;
+        }
+
+        private void BuildSearchResultsMenu(string query)
+        {
+            if (_searchResultsMenu == null) return;
+            _searchResultsMenu.Clear();
+
+            var database = _services.Resolve<VehicleDatabase>();
+            var results = database.Search(query)
+                .OrderBy(v => v.DisplayName, StringComparer.OrdinalIgnoreCase)
+                .Take(100)
+                .ToList();
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                var prompt = new NativeItem("Choose Search Vehicles to enter a query", "Search by vehicle name, model, or category");
+                prompt.Enabled = false;
+                _searchResultsMenu.Add(prompt);
+            }
+            else if (results.Count == 0)
+            {
+                var empty = new NativeItem("No matching vehicles", "Try a model name, display name, or category");
+                empty.Enabled = false;
+                _searchResultsMenu.Add(empty);
+            }
+            else
+            {
+                _searchResultsMenu.Add(new NativeItem("Query: " + query, results.Count + " result(s), maximum 100 shown") { Enabled = false });
+                foreach (var result in results)
+                {
+                    var captured = result;
+                    var item = new NativeItem(captured.DisplayName, captured.ModelName + " | " + captured.Category);
+                    item.Activated += (s, e) => SpawnVehicle(captured);
+                    _searchResultsMenu.Add(item);
+                }
+            }
+
+            _searchResultsMenu.Add(new NativeSeparatorItem("Search"));
+            var searchAgain = new NativeItem("Search Again", "Enter a different search query");
+            searchAgain.Activated += (s, e) => SearchVehiclesFromPrompt();
+            _searchResultsMenu.Add(searchAgain);
+            var back = new NativeItem("Back", "Return to Vehicle Spawner");
+            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
+            _searchResultsMenu.Add(back);
+        }
+
+        private void RefreshRecentVehiclesMenu()
+        {
+            if (_recentVehiclesMenu == null) return;
+            _recentVehiclesMenu.Clear();
+            var history = _vehicleManager.GetSpawnHistory()
+                .GroupBy(v => v.ModelName, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
+                .Take(30)
+                .ToList();
+            if (history.Count == 0)
+            {
+                var empty = new NativeItem("No recently spawned vehicles", "Spawn a vehicle to populate this list");
+                empty.Enabled = false;
+                _recentVehiclesMenu.Add(empty);
+            }
+            else
+            {
+                foreach (var vehicle in history)
+                {
+                    var captured = vehicle;
+                    var item = new NativeItem(captured.DisplayName, "Spawn again: " + captured.ModelName);
+                    item.Activated += (s, e) => SpawnVehicle(captured);
+                    _recentVehiclesMenu.Add(item);
+                }
+            }
+            var back = new NativeItem("Back", "Return to Vehicle Spawner");
+            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
+            _recentVehiclesMenu.Add(new NativeSeparatorItem("Navigation"));
+            _recentVehiclesMenu.Add(back);
         }
 
         private void BuildPresetMenus()
@@ -618,6 +739,7 @@ namespace TitanTrainer.UI
 
                 if (_vehicleManager.SpawnVehicle(vehicle, spawnInside, maxUpgrade))
                 {
+                    RefreshRecentVehiclesMenu();
                     _services.Resolve<NotificationService>()?.NotifySuccess("Spawned " + vehicle.DisplayName);
                 }
                 else
