@@ -19,6 +19,8 @@ namespace TitanTrainer.UI
         private readonly WeatherMenu _weatherMenu;
         private readonly PlayerMenu _playerMenu;
         private readonly TimeMenu _timeMenu;
+        private readonly WeaponsMenu _weaponsMenu;
+        private readonly TeleportMenu _teleportMenu;
         
         private readonly ServiceContainer _services;
 
@@ -35,6 +37,9 @@ namespace TitanTrainer.UI
             _weatherMenu = new WeatherMenu(services);
             _timeMenu = new TimeMenu(services);
             _playerMenu = new PlayerMenu(services);
+            _weaponsMenu = new WeaponsMenu(services.Resolve<NotificationService>(), () => { HideAllMenus(); _mainMenu.Show(); });
+            var playerManager = services.Resolve<TitanTrainer.Player.PlayerManager>();
+            _teleportMenu = new TeleportMenu(playerManager.Teleport, services.Resolve<NotificationService>(), () => { HideAllMenus(); _mainMenu.Show(); });
             
            
 
@@ -49,6 +54,8 @@ namespace TitanTrainer.UI
             _pool.Add(_timeMenu.Menu);
 
             _pool.Add(_playerMenu.Menu);
+            _pool.Add(_weaponsMenu.Menu);
+            _pool.Add(_teleportMenu.Menu);
             
             _mainMenu.Hide();
             _vehicleMenu.Hide();
@@ -56,6 +63,8 @@ namespace TitanTrainer.UI
             _weatherMenu.Hide();
             _timeMenu.Hide();
             _playerMenu.Hide();
+            _weaponsMenu.Hide();
+            _teleportMenu.Hide();
 
             BuildMainMenu();
         }
@@ -81,6 +90,14 @@ namespace TitanTrainer.UI
             };
 
             _mainMenu.Menu.Add(player);
+
+            var weapons = new NativeItem("Weapons", "Weapons, ammunition and loadouts");
+            weapons.Activated += (s, e) => { HideAllMenus(); _weaponsMenu.Show(); };
+            _mainMenu.Menu.Add(weapons);
+
+            var teleport = new NativeItem("Teleport", "Waypoint and saved locations");
+            teleport.Activated += (s, e) => { HideAllMenus(); _teleportMenu.Show(); };
+            _mainMenu.Menu.Add(teleport);
 
             //------------------------------------------------
             // Vehicle Spawner
@@ -168,7 +185,7 @@ namespace TitanTrainer.UI
             {
                 _services.Resolve<NotificationService>()
                     ?.NotifyInfo(
-                        "Titan Trainer\nVersion 0.1"
+                        "Titan Trainer\nVersion 0.4.0"
                     );
             };
 
@@ -185,6 +202,8 @@ namespace TitanTrainer.UI
             _weatherMenu.Hide();
             _timeMenu.Hide();
             _settingsMenu.Hide();
+            _weaponsMenu.Hide();
+            _teleportMenu.Hide();
         }
 
         //------------------------------------------------

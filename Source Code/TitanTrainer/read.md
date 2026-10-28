@@ -68,3 +68,18 @@ The vehicle browser is now split into separate menus:
 
 The browser menus are registered with LemonUI's object pool. The catalogue includes additional common truck and trailer model entries. If a model is unavailable in the installed GTA V build, spawning may fail; trailer models may also spawn unattached and need a tow vehicle. Categories with no available entries remain visible and show an explanatory placeholder.
 
+
+
+## Stage 4 — Expanded Trainer Features
+
+This release expands Titan Trainer with practical Story Mode trainer tools inspired by common single-player trainer workflows (it is not a feature-for-feature clone of Menyoo).
+
+- **Weapons & Loadouts:** equip common weapons, grant a standard arsenal, refill current-weapon ammo, toggle infinite clip, and remove all weapons.
+- **Teleport:** waypoint, forward/safe/sky movement, and curated Los Santos/Blaine County destinations.
+- **Vehicle Doors & Windows:** toggle individual doors, open/close all doors, and roll windows up/down.
+- **Waypoint fix:** removed a faulty repeated-teleport loop; the player is now moved once to a point above the waypoint.
+- **Vehicle control cleanup:** resets the windscreen-ejection setting when the player is no longer in a vehicle.
+
+### Compatibility and testing
+
+Target framework remains .NET Framework 4.8 for ScriptHookVDotNet 3. The source was statically reviewed and project/data files were validated in this packaging environment, but compilation and in-game behavior must still be verified locally with the matching ScriptHookVDotNet/LemonUI versions. Use only in GTA V Story Mode/offline; do not use trainer functions in GTA Online.

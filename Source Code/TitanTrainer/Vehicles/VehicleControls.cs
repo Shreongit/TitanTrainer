@@ -1,4 +1,4 @@
-﻿using GTA;
+using GTA;
 using GTA.Native;
 using TitanTrainer.Utils;
 
@@ -133,8 +133,11 @@ namespace TitanTrainer.Vehicles
             Vehicle vehicle = Game.Player.Character.CurrentVehicle;
 
             if (vehicle == null)
+            {
+                // Avoid carrying the no-ejection setting over after leaving a vehicle.
+                Game.Player.Character.CanFlyThroughWindscreen = true;
                 return;
-
+            }
 
             if (_seatbelt)
             {

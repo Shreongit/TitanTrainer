@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GTA;
 using GTA.Math;
 using GTA.Native;
@@ -55,25 +55,10 @@ namespace TitanTrainer.Player
 
                 Vector3 coords = Function.Call<Vector3>(Hash.GET_BLIP_COORDS, blip);
 
-                float groundZ = 0f;
-
-                bool foundGround = false;
-
-                for (float height = 1000f; height >= 0f; height -= 50f)
-                {
-                    TeleportTo(new Vector3(
-                        coords.X,
-                        coords.Y,
-                        coords.Z + 1f));
-
-                    if (foundGround)
-                        break;
-                }
-
-                if (!foundGround)
-                    groundZ = coords.Z;
-
-                TeleportTo(new Vector3(coords.X, coords.Y, groundZ + 1f));
+                // Do not repeatedly teleport while probing for ground: that loop never
+                // queried ground height and could leave the player in an arbitrary state.
+                // Start a little above the waypoint so GTA can stream collision safely.
+                TeleportTo(new Vector3(coords.X, coords.Y, coords.Z + 5f));
             }
             catch (Exception ex)
             {

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GTA;
+using GTA.Native;
 using LemonUI.Menus;
 using TitanTrainer.Core;
 using TitanTrainer.Utils;
@@ -112,6 +114,26 @@ namespace TitanTrainer.UI
             var personal = new NativeItem("Spawn Personal Vehicle");
             personal.Activated += (s, e) => _vehicleManager.Utility.SpawnPersonalVehicle();
             Menu.Add(personal);
+
+            Menu.Add(new NativeSeparatorItem("Doors & Windows"));
+            AddDoorAction("Toggle Driver Door", 0);
+            AddDoorAction("Toggle Passenger Door", 1);
+            AddDoorAction("Toggle Rear Left Door", 2);
+            AddDoorAction("Toggle Rear Right Door", 3);
+            AddDoorAction("Toggle Hood", 4);
+            AddDoorAction("Toggle Trunk", 5);
+            var allDoors = new NativeItem("Open All Doors");
+            allDoors.Activated += (s, e) => SetAllDoors(true);
+            Menu.Add(allDoors);
+            var closeDoors = new NativeItem("Close All Doors");
+            closeDoors.Activated += (s, e) => SetAllDoors(false);
+            Menu.Add(closeDoors);
+            var windowsDown = new NativeItem("Roll Down Windows");
+            windowsDown.Activated += (s, e) => ForEachWindow(true);
+            Menu.Add(windowsDown);
+            var windowsUp = new NativeItem("Roll Up Windows");
+            windowsUp.Activated += (s, e) => ForEachWindow(false);
+            Menu.Add(windowsUp);
 
             Menu.Add(new NativeSeparatorItem("Performance"));
             var maxUpgrade = new NativeItem("Max Upgrade");
@@ -226,6 +248,55 @@ namespace TitanTrainer.UI
                 _categoryMenu.Visible = true;
             };
             categorySubmenu.Add(backToCategories);
+        }
+
+        private void AddDoorAction(string label, int doorIndex)
+        {
+            var item = new NativeItem(label);
+            item.Activated += (s, e) =>
+            {
+                var vehicle = Game.Player.Character.CurrentVehicle;
+                if (vehicle == null || !vehicle.Exists())
+                {
+                    _services.Resolve<NotificationService>()?.NotifyError("Enter a vehicle first.");
+                    return;
+                }
+                if (Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, vehicle.Handle, doorIndex) > 0.1f)
+                    Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, vehicle.Handle, doorIndex, false);
+                else
+                    Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, vehicle.Handle, doorIndex, false, false);
+            };
+            Menu.Add(item);
+        }
+
+        private void SetAllDoors(bool open)
+        {
+            var vehicle = Game.Player.Character.CurrentVehicle;
+            if (vehicle == null || !vehicle.Exists())
+            {
+                _services.Resolve<NotificationService>()?.NotifyError("Enter a vehicle first.");
+                return;
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                if (open) Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, vehicle.Handle, i, false, false);
+                else Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, vehicle.Handle, i, false);
+            }
+        }
+
+        private void ForEachWindow(bool down)
+        {
+            var vehicle = Game.Player.Character.CurrentVehicle;
+            if (vehicle == null || !vehicle.Exists())
+            {
+                _services.Resolve<NotificationService>()?.NotifyError("Enter a vehicle first.");
+                return;
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                if (down) Function.Call(Hash.ROLL_DOWN_WINDOW, vehicle.Handle, i);
+                else Function.Call(Hash.ROLL_UP_WINDOW, vehicle.Handle, i);
+            }
         }
 
         private void SpawnVehicle(VehicleDefinition vehicle)
