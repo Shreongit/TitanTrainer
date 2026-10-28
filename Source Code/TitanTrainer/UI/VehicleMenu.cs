@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using GTA;
 using GTA.Native;
 using LemonUI.Menus;
@@ -22,6 +23,10 @@ namespace TitanTrainer.UI
         private readonly Dictionary<string, NativeMenu> _categoryMenus =
             new Dictionary<string, NativeMenu>(StringComparer.OrdinalIgnoreCase);
         private NativeMenu _categoryMenu;
+        private NativeMenu _presetMenu;
+        private NativeMenu _savedPresetsMenu;
+        private NativeMenu _favoritesMenu;
+        private readonly VehiclePresetService _presetService;
 
         public NativeMenu Menu { get; }
         public IEnumerable<NativeMenu> AllMenus => _allMenus;
@@ -30,10 +35,15 @@ namespace TitanTrainer.UI
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _vehicleManager = _services.Resolve<VehicleManager>();
+            _presetService = new VehiclePresetService(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data"),
+                _services.Resolve<VehicleDatabase>(),
+                _services.Resolve<NotificationService>());
 
             Menu = CreateMenu("Vehicle Spawner", "Vehicle controls and browsing");
             BuildMenu();
             BuildCategoryMenus();
+            BuildPresetMenus();
         }
 
         private NativeMenu CreateMenu(string title, string subtitle)
@@ -148,6 +158,127 @@ namespace TitanTrainer.UI
                 _categoryMenu.Visible = true;
             };
             Menu.Add(browse);
+
+            Menu.Add(new NativeSeparatorItem("Presets & Favorites"));
+            var presets = new NativeItem("Vehicle Presets & Favorites", "Save, restore, and favorite vehicles");
+            presets.Activated += (s, e) =>
+            {
+                RefreshPresetMenu();
+                HideAll();
+                _presetMenu.Visible = true;
+            };
+            Menu.Add(presets);
+        }
+
+
+        private void BuildPresetMenus()
+        {
+            _presetMenu = CreateMenu("Vehicle Presets", "Save and restore your favorite setups");
+            _savedPresetsMenu = CreateMenu("Saved Vehicle Presets", "Select a preset to load it");
+            _favoritesMenu = CreateMenu("Favorite Vehicles", "Spawn or remove favorite vehicles");
+            RefreshPresetMenu();
+        }
+
+        private void RefreshPresetMenu()
+        {
+            if (_presetMenu == null) return;
+            _presetMenu.Clear();
+            var save = new NativeItem("Save Current Vehicle Preset", "Save model, colors, damage, and installed mods");
+            save.Activated += (s, e) =>
+            {
+                if (_presetService.SaveCurrentVehicle()) RefreshPresetMenu();
+            };
+            _presetMenu.Add(save);
+
+            var favorite = new NativeItem("Add / Remove Current Vehicle Favorite", "Toggle the current vehicle in your favorites");
+            favorite.Activated += (s, e) =>
+            {
+                if (_presetService.ToggleFavoriteCurrent()) RefreshPresetMenu();
+            };
+            _presetMenu.Add(favorite);
+
+            var saved = new NativeItem("Saved Presets (" + _presetService.Presets.Count + ")");
+            saved.Activated += (s, e) =>
+            {
+                RefreshSavedPresetsMenu();
+                HideAll();
+                _savedPresetsMenu.Visible = true;
+            };
+            _presetMenu.Add(saved);
+
+            var favorites = new NativeItem("Favorites (" + _presetService.Favorites.Count + ")");
+            favorites.Activated += (s, e) =>
+            {
+                RefreshFavoritesMenu();
+                HideAll();
+                _favoritesMenu.Visible = true;
+            };
+            _presetMenu.Add(favorites);
+
+            var back = new NativeItem("Back", "Return to Vehicle Spawner");
+            back.Activated += (s, e) => { HideAll(); Menu.Visible = true; };
+            _presetMenu.Add(new NativeSeparatorItem("Navigation"));
+            _presetMenu.Add(back);
+        }
+
+        private void RefreshSavedPresetsMenu()
+        {
+            _savedPresetsMenu.Clear();
+            if (_presetService.Presets.Count == 0)
+            {
+                var empty = new NativeItem("No saved presets", "Enter a vehicle and use Save Current Vehicle Preset");
+                empty.Enabled = false;
+                _savedPresetsMenu.Add(empty);
+            }
+            foreach (var preset in _presetService.Presets.ToList())
+            {
+                var captured = preset;
+                var load = new NativeItem(captured.Name, "Load this vehicle and restore its saved setup");
+                load.Activated += (s, e) => _presetService.SpawnPreset(captured.Id);
+                _savedPresetsMenu.Add(load);
+                var delete = new NativeItem("Delete: " + captured.Name, "Permanently remove this saved preset");
+                delete.Activated += (s, e) =>
+                {
+                    _presetService.DeletePreset(captured.Id);
+                    RefreshSavedPresetsMenu();
+                    RefreshPresetMenu();
+                };
+                _savedPresetsMenu.Add(delete);
+            }
+            var back = new NativeItem("Back", "Return to Vehicle Presets");
+            back.Activated += (s, e) => { HideAll(); _presetMenu.Visible = true; };
+            _savedPresetsMenu.Add(new NativeSeparatorItem("Navigation"));
+            _savedPresetsMenu.Add(back);
+        }
+
+        private void RefreshFavoritesMenu()
+        {
+            _favoritesMenu.Clear();
+            if (_presetService.Favorites.Count == 0)
+            {
+                var empty = new NativeItem("No favorite vehicles", "Enter a vehicle and add it to favorites");
+                empty.Enabled = false;
+                _favoritesMenu.Add(empty);
+            }
+            foreach (var favorite in _presetService.Favorites.ToList())
+            {
+                var captured = favorite;
+                var spawn = new NativeItem(captured.Name, "Spawn this favorite vehicle");
+                spawn.Activated += (s, e) => _presetService.SpawnFavorite(captured.Id);
+                _favoritesMenu.Add(spawn);
+                var remove = new NativeItem("Remove: " + captured.Name, "Remove from favorites");
+                remove.Activated += (s, e) =>
+                {
+                    _presetService.RemoveFavorite(captured.Id);
+                    RefreshFavoritesMenu();
+                    RefreshPresetMenu();
+                };
+                _favoritesMenu.Add(remove);
+            }
+            var back = new NativeItem("Back", "Return to Vehicle Presets");
+            back.Activated += (s, e) => { HideAll(); _presetMenu.Visible = true; };
+            _favoritesMenu.Add(new NativeSeparatorItem("Navigation"));
+            _favoritesMenu.Add(back);
         }
 
         private void BuildCategoryMenus()

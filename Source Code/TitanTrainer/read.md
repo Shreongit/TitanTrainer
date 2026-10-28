@@ -125,3 +125,24 @@ Ped commands only affect pedestrians created and tracked by Titan Trainer; they 
 ### Stage 7 validation status
 
 The source was updated and the archive/project structure can be statically validated. This environment does not provide the .NET Framework/MSBuild toolchain, so a successful compile and in-game behavior have not been confirmed. Build in Rider against your installed ScriptHookVDotNet 3 and LemonUI assemblies, then test each action in Story Mode before release.
+
+## Stage 8 — Vehicle Presets and Favorites
+
+Stage 8 adds persistent vehicle collections stored in JSON files in the trainer's `Data` directory.
+
+### Vehicle presets
+- Save the current vehicle's model hash, primary/secondary colors, engine/body health, dirt level, installed mod slots, and toggle mods.
+- Load a saved preset by spawning the stored model and restoring the saved properties.
+- Delete presets from the Saved Vehicle Presets submenu.
+- Presets are stored in `Data/vehicle-presets.json` and survive game/script restarts.
+
+### Favorites
+- Add or remove the current vehicle from favorites with one menu action.
+- Spawn favorite models from a dedicated submenu.
+- Remove favorites without deleting saved presets.
+- Favorites are stored in `Data/favorites.json`.
+
+### Notes and limitations
+- The game model hash is saved as the authoritative model identifier, so vehicles outside the bundled catalogue can be favorited and spawned while the model remains available in the installed GTA V build.
+- Some vehicle modifications may not be compatible across different vehicle models or game/DLC versions. Failed mod restoration is logged while keeping the spawned vehicle available.
+- Use these features in GTA V Story Mode. A successful local build and in-game test are still required for release verification.
