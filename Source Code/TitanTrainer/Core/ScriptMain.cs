@@ -17,6 +17,10 @@ namespace TitanTrainer
     public class ScriptMain : Script
     {
         private readonly ServiceContainer _services;
+        private Config _config;
+        private Keys _toggleMenuKey = Keys.F5;
+        private bool _initialized;
+        private bool _disposed;
 
         private readonly NotificationService _notificationService;
 
@@ -40,8 +44,16 @@ namespace TitanTrainer
                 _services = new ServiceContainer();
 
                 // Config
-                var config = Config.LoadOrCreate("Data/config.json");
-                _services.Register(config);
+                _config = Config.LoadOrCreate("Data/config.json");
+                _services.Register(_config);
+
+                if (!Enum.TryParse(_config.ToggleMenuKey, true, out _toggleMenuKey) || _toggleMenuKey == Keys.None)
+                {
+                    _toggleMenuKey = Keys.F5;
+                    _config.ToggleMenuKey = Keys.F5.ToString();
+                    _config.Save();
+                    Logger.Warn("Invalid ToggleMenuKey in config; using F5.");
+                }
 
                 // Notification Service
                 _notificationService = new NotificationService();
@@ -76,7 +88,11 @@ namespace TitanTrainer
 
                 Logger.Info("Titan Trainer initialized successfully.");
 
-                _notificationService.NotifySuccess("Titan Trainer Loaded");
+                _initialized = true;
+                if (_config.EnableNotifications)
+                {
+                    _notificationService.NotifySuccess("Titan Trainer Loaded");
+                }
             }
             catch (Exception ex)
             {
@@ -94,6 +110,8 @@ namespace TitanTrainer
 
         private void OnTick(object sender, EventArgs e)
         {
+            if (!_initialized || _disposed) return;
+
             try
             {
                 _weatherManager?.Update();
@@ -116,9 +134,11 @@ namespace TitanTrainer
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            if (!_initialized || _disposed) return;
+
             try
             {
-                if (e.KeyCode == Keys.F5)
+                if (e.KeyCode == _toggleMenuKey)
                 {
                     _menuManager.ToggleMainMenu();
                 }
@@ -131,6 +151,10 @@ namespace TitanTrainer
 
         public void Dispose()
         {
+            if (_disposed) return;
+            _disposed = true;
+            _initialized = false;
+
             try
             {
                 Tick -= OnTick;
@@ -141,8 +165,6 @@ namespace TitanTrainer
                 _weatherManager?.Dispose();
                 _timeManager?.Dispose();
                 _playerManager?.Dispose();
-
-                _vehicleManager?.Update();
 
                 _vehicleManager?.Dispose();
                 _vehicleDatabase?.Dispose();

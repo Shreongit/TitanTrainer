@@ -77,13 +77,23 @@ namespace TitanTrainer.Core
 
                 // ensure internal path is set to where we loaded from
                 cfgFromFile._path = full;
+                if (string.IsNullOrWhiteSpace(cfgFromFile.ToggleMenuKey))
+                {
+                    cfgFromFile.ToggleMenuKey = "F5";
+                }
+                if (cfgFromFile.SpawnDefaults == null)
+                {
+                    cfgFromFile.SpawnDefaults = new SpawnDefaults();
+                }
                 return cfgFromFile;
             }
             catch (Exception ex)
             {
                 Logger.Error("Failed to load config: " + ex);
                 // If anything goes wrong, return a default config that points to the requested file path
-                return new Config(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
+                var fallback = new Config(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
+                fallback.Save();
+                return fallback;
             }
         }
 

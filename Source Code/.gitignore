@@ -1,0 +1,14 @@
+# Build output
+**/bin/
+**/obj/
+
+# IDE metadata
+.idea/
+.vs/
+
+# Runtime logs
+**/Logs/
+**/logs/
+
+# Local user data generated at runtime
+**/Data/favorites.json

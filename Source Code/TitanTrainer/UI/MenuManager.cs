@@ -211,7 +211,7 @@ namespace TitanTrainer.UI
 
         public void Dispose()
         {
-            // Nothing yet
+            HideAllMenus();
         }
     }
 }

@@ -73,7 +73,16 @@ namespace TitanTrainer.Core
                 {
                     if (string.IsNullOrEmpty(_currentLogPath))
                     {
-                        Initialize(_componentName);
+                        try
+                        {
+                            _logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", _componentName);
+                            Directory.CreateDirectory(_logDirectory);
+                            _currentLogPath = Path.Combine(_logDirectory, $"{DateTime.UtcNow:yyyy-MM-dd}.log");
+                        }
+                        catch
+                        {
+                            return;
+                        }
                     }
 
                     var timestamp = DateTime.UtcNow.ToString("o"); // ISO 8601
